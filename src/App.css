@@ -1,0 +1,18 @@
+/* App.css - Minimal Global Overrides */
+
+.App {
+  text-align: center;
+}
+
+/* Bootstrap dark mode overrides for the food app's light theme */
+body,
+.bg-body-tertiary,
+.bg-dark,
+[data-bs-theme="dark"] {
+  background-color: #faf6f1 !important;
+  color: #1a1208 !important;
+}
+
+.carousel-caption {
+  bottom: 15%;
+}

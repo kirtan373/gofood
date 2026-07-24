@@ -1,0 +1,416 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaUser, FaEnvelope, FaLock, FaMapMarkerAlt, FaEye, FaEyeSlash } from 'react-icons/fa';
+
+export default function Signup() {
+  const navigate = useNavigate();
+  const [credentials, setCredentials] = useState({ name: "", email: "", password: "", confirmPassword: "", geolocation: "" });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (credentials.name.length < 5) {
+      setError("Name must be at least 5 characters");
+      return;
+    }
+    if (credentials.password.length < 5) {
+      setError("Password must be at least 5 characters");
+      return;
+    }
+    if (credentials.password !== credentials.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:5001/api/createuser", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: credentials.name,
+          email: credentials.email,
+          password: credentials.password,
+          location: credentials.geolocation
+        })
+      });
+
+      const json = await response.json();
+
+      if (json.success) {
+        navigate("/login");
+      } else {
+        setError(json.message || "Registration failed. Please try again.");
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (event) => {
+    setCredentials({ ...credentials, [event.target.name]: event.target.value });
+    if (error) setError("");
+  };
+
+  return (
+    <div style={styles.page}>
+      <div style={styles.container}>
+        {/* Left Panel */}
+        <div style={styles.leftPanel}>
+          <div style={styles.leftContent}>
+            <div style={styles.brandMark}>🍽️</div>
+            <h1 style={styles.brandTitle}>GoFood</h1>
+            <p style={styles.brandTagline}>
+              Join thousands of food lovers who order fresh meals every day
+            </p>
+            <div style={styles.features}>
+              <div style={styles.featureItem}>
+                <span style={styles.featureIcon}>🎉</span>
+                <span>Exclusive member discounts</span>
+              </div>
+              <div style={styles.featureItem}>
+                <span style={styles.featureIcon}>📦</span>
+                <span>Track orders in real time</span>
+              </div>
+              <div style={styles.featureItem}>
+                <span style={styles.featureIcon}>⭐</span>
+                <span>Rate and review dishes</span>
+              </div>
+            </div>
+          </div>
+          <div style={styles.leftOverlay} />
+        </div>
+
+        {/* Right Panel - Form */}
+        <div style={styles.rightPanel}>
+          <div style={styles.formWrapper}>
+            <h2 style={styles.title}>Create your account</h2>
+            <p style={styles.subtitle}>Start ordering in just a minute</p>
+
+            {error && <div style={styles.errorBox}>{error}</div>}
+
+            <form onSubmit={handleSubmit}>
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Full Name</label>
+                <div style={styles.inputWrapper}>
+                  <FaUser style={styles.inputIcon} />
+                  <input
+                    type="text"
+                    name="name"
+                    value={credentials.name}
+                    onChange={handleChange}
+                    placeholder="John Doe"
+                    required
+                    style={styles.input}
+                  />
+                </div>
+              </div>
+
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Email</label>
+                <div style={styles.inputWrapper}>
+                  <FaEnvelope style={styles.inputIcon} />
+                  <input
+                    type="email"
+                    name="email"
+                    value={credentials.email}
+                    onChange={handleChange}
+                    placeholder="you@example.com"
+                    required
+                    style={styles.input}
+                  />
+                </div>
+              </div>
+
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Password</label>
+                <div style={styles.inputWrapper}>
+                  <FaLock style={styles.inputIcon} />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={credentials.password}
+                    onChange={handleChange}
+                    placeholder="Min 5 characters"
+                    required
+                    style={{ ...styles.input, paddingRight: "3rem" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={styles.pwToggle}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+              </div>
+
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Confirm Password</label>
+                <div style={styles.inputWrapper}>
+                  <FaLock style={styles.inputIcon} />
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    value={credentials.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Re-enter your password"
+                    required
+                    style={{ ...styles.input, paddingRight: "3rem" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    style={styles.pwToggle}
+                  >
+                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+              </div>
+
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Delivery Location</label>
+                <div style={styles.inputWrapper}>
+                  <FaMapMarkerAlt style={styles.inputIcon} />
+                  <input
+                    type="text"
+                    name="geolocation"
+                    value={credentials.geolocation}
+                    onChange={handleChange}
+                    placeholder="e.g. Kathmandu, Nepal"
+                    required
+                    style={styles.input}
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                style={{ ...styles.submitBtn, opacity: loading ? 0.7 : 1 }}
+              >
+                {loading ? "Creating account..." : "Create Account"}
+              </button>
+            </form>
+
+            <div style={styles.divider}>
+              <span style={styles.dividerLine} />
+              <span style={styles.dividerText}>or</span>
+              <span style={styles.dividerLine} />
+            </div>
+
+            <Link to="/login" style={styles.loginBtn}>
+              Already have an account? Login
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const styles = {
+  page: {
+    minHeight: "100vh",
+    background: "#f0f2f5",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "1rem",
+  },
+  container: {
+    display: "flex",
+    width: "100%",
+    maxWidth: "900px",
+    minHeight: "620px",
+    borderRadius: "16px",
+    overflow: "hidden",
+    boxShadow: "0 20px 60px rgba(0,0,0,0.12)",
+    background: "#fff",
+  },
+  leftPanel: {
+    flex: "1",
+    background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+    color: "#fff",
+    padding: "3rem 2.5rem",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    position: "relative",
+    overflow: "hidden",
+  },
+  leftOverlay: {
+    position: "absolute",
+    inset: 0,
+    background: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+    pointerEvents: "none",
+  },
+  leftContent: {
+    position: "relative",
+    zIndex: 1,
+  },
+  brandMark: {
+    fontSize: "2.5rem",
+    marginBottom: "0.5rem",
+  },
+  brandTitle: {
+    fontSize: "2rem",
+    fontWeight: "700",
+    margin: "0 0 0.5rem 0",
+    letterSpacing: "-0.02em",
+  },
+  brandTagline: {
+    fontSize: "0.95rem",
+    opacity: 0.8,
+    margin: "0 0 2.5rem 0",
+    lineHeight: 1.6,
+  },
+  features: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+  },
+  featureItem: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.75rem",
+    fontSize: "0.9rem",
+    opacity: 0.85,
+  },
+  featureIcon: {
+    fontSize: "1.1rem",
+    width: "32px",
+    height: "32px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "rgba(255,255,255,0.1)",
+    borderRadius: "8px",
+  },
+  rightPanel: {
+    flex: "1",
+    padding: "2.5rem",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  formWrapper: {
+    width: "100%",
+    maxWidth: "340px",
+  },
+  title: {
+    fontSize: "1.5rem",
+    fontWeight: "700",
+    color: "#1a1a2e",
+    margin: "0 0 0.25rem 0",
+  },
+  subtitle: {
+    fontSize: "0.9rem",
+    color: "#6b7280",
+    margin: "0 0 1.5rem 0",
+  },
+  errorBox: {
+    background: "#fef2f2",
+    border: "1px solid #fecaca",
+    color: "#dc2626",
+    padding: "0.75rem 1rem",
+    borderRadius: "8px",
+    fontSize: "0.85rem",
+    marginBottom: "1.25rem",
+  },
+  inputGroup: {
+    marginBottom: "1.1rem",
+  },
+  label: {
+    display: "block",
+    fontSize: "0.82rem",
+    fontWeight: "600",
+    color: "#374151",
+    marginBottom: "0.35rem",
+  },
+  inputWrapper: {
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+  },
+  inputIcon: {
+    position: "absolute",
+    left: "12px",
+    color: "#9ca3af",
+    fontSize: "0.85rem",
+    pointerEvents: "none",
+  },
+  input: {
+    width: "100%",
+    padding: "0.65rem 0.75rem 0.65rem 2.5rem",
+    border: "1.5px solid #e5e7eb",
+    borderRadius: "10px",
+    fontSize: "0.88rem",
+    color: "#1f2937",
+    background: "#fafafa",
+    outline: "none",
+    boxSizing: "border-box",
+  },
+  pwToggle: {
+    position: "absolute",
+    right: "10px",
+    background: "none",
+    border: "none",
+    color: "#9ca3af",
+    cursor: "pointer",
+    padding: "4px",
+    display: "flex",
+    alignItems: "center",
+    fontSize: "0.9rem",
+  },
+  submitBtn: {
+    display: "block",
+    width: "100%",
+    padding: "0.72rem",
+    background: "linear-gradient(135deg, #e97451, #d4553a)",
+    color: "#fff",
+    border: "none",
+    borderRadius: "10px",
+    fontSize: "0.92rem",
+    fontWeight: "600",
+    cursor: "pointer",
+    marginTop: "0.4rem",
+  },
+  divider: {
+    display: "flex",
+    alignItems: "center",
+    margin: "1.25rem 0",
+    gap: "0.75rem",
+  },
+  dividerLine: {
+    flex: 1,
+    height: "1px",
+    background: "#e5e7eb",
+  },
+  dividerText: {
+    fontSize: "0.8rem",
+    color: "#9ca3af",
+  },
+  loginBtn: {
+    display: "block",
+    width: "100%",
+    padding: "0.72rem",
+    background: "transparent",
+    color: "#374151",
+    border: "1.5px solid #d1d5db",
+    borderRadius: "10px",
+    fontSize: "0.88rem",
+    fontWeight: "600",
+    cursor: "pointer",
+    textAlign: "center",
+    textDecoration: "none",
+  },
+};
