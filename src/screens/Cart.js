@@ -16,99 +16,82 @@ export default function Cart() {
 
   const hbStyles = (
     <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap');
-
       .hb-cart-page {
-        --charcoal: #211c17;
-        --charcoal-soft: #322a22;
-        --cream: #cc932f;
-        --turmeric: #e8a33d;
-        --turmeric-deep: #c97f1f;
-        --chili: #c1432e;
-        --sage: #5b7553;
-        --font-display: 'Fraunces', 'Georgia', serif;
-        --font-body: 'Work Sans', 'Segoe UI', sans-serif;
-        --font-mono: 'Space Mono', 'Courier New', monospace;
+        --espresso-950: #120e0a;
+        --espresso-900: #17120d;
+        --espresso-800: #1f1913;
+        --espresso-700: #2a221a;
+        --brand: #ff6b35;
+        --brand-dark: #e14f1d;
+        --cream: #f7f1e7;
+        --ink: #201a14;
+        --muted: #776c5f;
+        --border: #eae2d6;
         min-height: 60vh;
-        background: var(--charcoal);
-        padding: 3rem 0 4rem 0;
+        background:
+          radial-gradient(900px 400px at 80% -10%, rgba(255, 107, 53, 0.1), transparent 60%),
+          radial-gradient(700px 380px at 10% 110%, rgba(232, 163, 61, 0.07), transparent 60%),
+          var(--espresso-900);
+        padding: 3rem 1rem 4rem;
       }
 
       .hb-cart-empty {
-        font-family: var(--font-display);
-        font-weight: 700;
-        color: var(--cream);
-        font-size: clamp(1.4rem, 3vw, 2rem);
+        font-family: 'DM Serif Display', Georgia, serif;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: clamp(1.5rem, 3vw, 2rem);
         text-align: center;
-        opacity: 0.85;
+        padding: 4rem 1rem;
       }
 
       .hb-ticket {
-        max-width: 780px;
+        max-width: 840px;
         margin: 0 auto;
         background: var(--cream);
-        border-radius: 4px;
-        padding: 2rem 2rem 1.5rem 2rem;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.35);
-        position: relative;
+        border-radius: 20px;
+        padding: 2rem 2rem 1.5rem;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+        color: var(--ink);
       }
-
-      .hb-ticket::before,
-      .hb-ticket::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        height: 14px;
-        background:
-          radial-gradient(circle at 10px 0, transparent 8px, var(--charcoal) 8px) repeat-x;
-        background-size: 20px 14px;
-      }
-
-      .hb-ticket::before { top: -1px; transform: rotate(180deg); }
-      .hb-ticket::after { bottom: -1px; }
 
       .hb-ticket-eyebrow {
-        font-family: var(--font-mono);
-        text-transform: uppercase;
-        letter-spacing: 0.28em;
         font-size: 0.7rem;
-        color: var(--chili);
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--brand-dark);
+        font-weight: 700;
         margin-bottom: 4px;
       }
 
       .hb-ticket-title {
-        font-family: var(--font-display);
-        font-weight: 700;
-        font-size: clamp(1.4rem, 3vw, 1.9rem);
-        color: var(--charcoal);
+        font-family: 'DM Serif Display', Georgia, serif;
+        font-weight: 400;
+        font-size: clamp(1.5rem, 3vw, 1.9rem);
+        color: var(--ink);
         margin-bottom: 1.5rem;
       }
 
       .hb-cart-table {
         width: 100%;
         border-collapse: collapse;
-        font-family: var(--font-body);
       }
 
       .hb-cart-table thead th {
-        font-family: var(--font-mono);
         text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-size: 0.72rem;
-        color: var(--charcoal-soft);
-        opacity: 0.7;
-        font-weight: 600;
-        padding: 0 8px 10px 8px;
-        border-bottom: 2px dashed rgba(33, 28, 23, 0.25);
+        letter-spacing: 0.1em;
+        font-size: 0.68rem;
+        color: var(--muted);
+        font-weight: 700;
+        padding: 0 8px 12px 8px;
+        border-bottom: 2px solid var(--border);
         text-align: left;
       }
 
       .hb-cart-table tbody td,
       .hb-cart-table tbody th {
-        padding: 14px 8px;
-        border-bottom: 1px solid rgba(33, 28, 23, 0.1);
-        color: var(--charcoal);
+        padding: 16px 8px;
+        border-bottom: 1px solid var(--border);
+        color: var(--ink);
         vertical-align: middle;
       }
 
@@ -118,9 +101,10 @@ export default function Cart() {
       }
 
       .hb-row-index {
-        font-family: var(--font-mono);
-        color: var(--chili);
-        opacity: 0.8;
+        font-weight: 700;
+        color: var(--brand-dark);
+        opacity: 0.55;
+        font-size: 0.85rem;
       }
 
       .hb-row-name {
@@ -128,7 +112,7 @@ export default function Cart() {
       }
 
       .hb-row-amount {
-        font-family: var(--font-mono);
+        font-weight: 700;
       }
 
       /* ── Quantity Controls ── */
@@ -136,7 +120,8 @@ export default function Cart() {
         display: inline-flex;
         align-items: center;
         gap: 0;
-        background: rgba(33, 28, 23, 0.06);
+        background: #fff;
+        border: 1px solid var(--border);
         border-radius: 999px;
         padding: 2px;
       }
@@ -150,15 +135,15 @@ export default function Cart() {
         border-radius: 50%;
         border: none;
         background: transparent;
-        color: var(--charcoal);
+        color: var(--ink);
         cursor: pointer;
         transition: all 0.15s ease;
         font-size: 0.7rem;
       }
 
       .hb-qty-btn:hover {
-        background: var(--charcoal);
-        color: var(--cream);
+        background: var(--brand);
+        color: #fff;
       }
 
       .hb-qty-btn:active {
@@ -166,17 +151,16 @@ export default function Cart() {
       }
 
       .hb-qty-btn.remove-btn:hover {
-        background: var(--chili);
+        background: #e5484d;
         color: #fff;
       }
 
       .hb-qty-num {
         min-width: 32px;
         text-align: center;
-        font-family: var(--font-mono);
         font-weight: 700;
         font-size: 0.9rem;
-        color: var(--charcoal);
+        color: var(--ink);
         user-select: none;
       }
 
@@ -193,12 +177,12 @@ export default function Cart() {
       }
 
       .hb-delete-btn:hover {
-        background: rgba(193, 67, 46, 0.12);
+        background: rgba(229, 72, 77, 0.12);
         transform: scale(1.08);
       }
 
       .hb-delete-btn svg {
-        stroke: var(--chili);
+        stroke: #e5484d;
       }
 
       /* ── Footer ── */
@@ -210,47 +194,48 @@ export default function Cart() {
         gap: 1.25rem;
         margin-top: 1.75rem;
         padding-top: 1.5rem;
-        border-top: 2px dashed rgba(33, 28, 23, 0.25);
+        border-top: 2px solid var(--border);
       }
 
       .hb-total-label {
-        font-family: var(--font-mono);
         text-transform: uppercase;
-        letter-spacing: 0.1em;
-        font-size: 0.78rem;
-        color: var(--charcoal-soft);
-        opacity: 0.7;
+        letter-spacing: 0.12em;
+        font-size: 0.7rem;
+        color: var(--muted);
+        font-weight: 700;
         margin-bottom: 2px;
       }
 
       .hb-total-amount {
-        font-family: var(--font-display);
-        font-weight: 700;
+        font-family: 'DM Serif Display', Georgia, serif;
+        font-weight: 400;
         font-size: 2rem;
-        color: var(--charcoal);
+        color: var(--brand-dark);
       }
 
       .hb-checkout-btn {
-        background: var(--sage);
-        color: var(--cream);
+        background-image: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+        color: #fff;
         border: none;
-        font-weight: 600;
-        letter-spacing: 0.03em;
-        padding: 12px 32px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        padding: 14px 34px;
         border-radius: 999px;
-        transition: background 0.2s ease, transform 0.15s ease;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.2s ease;
+        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.32);
       }
 
       .hb-checkout-btn:hover {
-        background: #4a6144;
-        transform: translateY(-1px);
-        color: var(--cream);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 28px rgba(255, 107, 53, 0.42);
       }
 
       /* ── Responsive ── */
       @media (max-width: 640px) {
         .hb-ticket {
-          padding: 1.5rem 1rem 1rem 1rem;
+          padding: 1.5rem 1rem 1rem;
+          border-radius: 16px;
         }
         .hb-cart-table thead {
           display: none;
@@ -260,7 +245,7 @@ export default function Cart() {
           flex-wrap: wrap;
           gap: 4px 12px;
           padding: 12px 0;
-          border-bottom: 1px solid rgba(33, 28, 23, 0.1);
+          border-bottom: 1px solid var(--border);
         }
         .hb-cart-table tbody tr:last-child {
           border-bottom: none;

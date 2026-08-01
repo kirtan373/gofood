@@ -1,0 +1,541 @@
+/* ============================================================
+   MITHO — SHARED UI KIT
+   Skeleton loaders, food rows, promo slider,
+   floating cart, scroll-to-top, 404, wishlist, badges.
+   ============================================================ */
+
+/* ── Shared landing layout + buttons (defined here too so lazy
+      chunks that reuse them never lose styles) ── */
+.lp-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.lp-section {
+  padding: 80px 0;
+}
+.lp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 13px 28px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  font-family: inherit;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  color: #fff;
+}
+.lp-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.3);
+  color: #fff;
+}
+
+/* ── Skeleton shimmer ── */
+.gf-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-warm);
+  border-radius: var(--radius-sm);
+  animation: gf-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes gf-shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.gf-skeleton--image {
+  height: 200px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background-image: linear-gradient(90deg, var(--bg-warm) 0%, var(--border-light) 50%, var(--bg-warm) 100%);
+  background-size: 800px 100%;
+}
+.gf-skeleton--line {
+  height: 14px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background-image: linear-gradient(90deg, var(--bg-warm) 0%, var(--border-light) 50%, var(--bg-warm) 100%);
+  background-size: 800px 100%;
+}
+.gf-skeleton--line.short { width: 55%; }
+.gf-skeleton--circle {
+  border-radius: 50%;
+  background-image: linear-gradient(90deg, var(--bg-warm) 0%, var(--border-light) 50%, var(--bg-warm) 100%);
+  background-size: 800px 100%;
+}
+
+.gf-skeleton-card {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.gf-skeleton-card .gf-skeleton-body {
+  padding: 16px;
+}
+
+/* ── Section header used by rows ── */
+.gf-row-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.gf-row-title {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.gf-row-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--brand);
+  margin-bottom: 6px;
+}
+.gf-row-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--brand);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: gap 0.2s;
+}
+.gf-row-link:hover {
+  color: var(--brand-dark);
+  gap: 10px;
+}
+
+/* ── Horizontal scroll row of food tiles ── */
+.gf-scroll-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(200px, 220px);
+  gap: 18px;
+  overflow-x: auto;
+  padding: 4px 4px 16px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  scroll-snap-type: x mandatory;
+}
+.gf-scroll-row::-webkit-scrollbar { height: 8px; }
+.gf-scroll-row::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+.gf-scroll-row > * { scroll-snap-align: start; }
+
+@media (max-width: 576px) {
+  .gf-scroll-row {
+    grid-auto-columns: minmax(150px, 170px);
+    gap: 12px;
+  }
+}
+
+/* ── Food tile ── */
+.gf-tile {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--ink);
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out), border-color 0.3s;
+  display: block;
+}
+.gf-tile:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: transparent;
+}
+.gf-tile .gf-tile-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+  background: var(--bg-warm);
+  transition: transform 0.5s var(--ease-out);
+}
+.gf-tile:hover .gf-tile-img {
+  transform: scale(1.07);
+}
+.gf-tile-body {
+  padding: 14px 16px 16px;
+}
+.gf-tile-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gf-tile-cat {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-light);
+  margin-bottom: 10px;
+}
+.gf-tile-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.gf-tile-price span {
+  font-weight: 700;
+  color: var(--brand);
+  font-size: 0.98rem;
+}
+
+/* ── Favorite (wishlist) heart button ── */
+.gf-fav-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s var(--ease-out);
+  box-shadow: var(--shadow-sm);
+}
+.gf-fav-btn:hover {
+  transform: scale(1.12);
+  color: #e5484d;
+}
+.gf-fav-btn.gf-fav-active {
+  background: #e5484d;
+  border-color: #e5484d;
+  color: #fff;
+}
+
+/* ── Corner badge on tiles (Trending / Special / Featured) ── */
+.gf-tile-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 3;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background-image: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  box-shadow: var(--shadow-brand);
+}
+
+/* ── Promo slider ── */
+.promo-slider {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  margin: 0 24px;
+}
+.promo-track {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.promo-slide {
+  position: relative;
+  flex: 0 0 100%;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  padding: 48px 56px;
+  color: #fff;
+  overflow: hidden;
+  background: linear-gradient(120deg, var(--espresso-900), var(--espresso-700));
+}
+.promo-slide-img {
+  position: absolute;
+  right: -40px;
+  bottom: -30px;
+  width: 320px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 50%;
+  opacity: 0.9;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+}
+.promo-slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 80% 50%, transparent 30%, rgba(18, 14, 10, 0.55) 100%);
+}
+.promo-slide-content {
+  position: relative;
+  z-index: 2;
+  max-width: 480px;
+}
+.promo-slide-tag {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: 16px;
+}
+.promo-slide h3 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  font-weight: 400;
+  color: #fff;
+  margin-bottom: 10px;
+  line-height: 1.15;
+}
+.promo-slide p {
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 22px;
+  font-size: 0.98rem;
+}
+.promo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  color: var(--espresso-900);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 12px 24px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.promo-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.3);
+  color: var(--espresso-900);
+}
+.promo-dots {
+  position: absolute;
+  bottom: 18px;
+  left: 56px;
+  z-index: 3;
+  display: flex;
+  gap: 8px;
+}
+.promo-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.promo-dot.promo-dot-active {
+  background: var(--brand);
+  width: 24px;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .promo-slider { margin: 0 16px; }
+  .promo-slide { padding: 32px 24px; min-height: 230px; }
+  .promo-slide-img { width: 200px; height: 200px; }
+  .promo-dots { left: 24px; }
+}
+
+/* ── Route-level loader (shown while lazy chunks load) ── */
+.app-loader {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: var(--bg);
+}
+.app-loader-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: app-spin 0.7s linear infinite;
+}
+.app-loader p {
+  font-size: 0.9375rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+@keyframes app-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Floating cart + scroll-to-top ── */
+.floating-cart {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1500;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow: 0 12px 32px rgba(255, 107, 53, 0.4);
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s;
+}
+.floating-cart:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 16px 40px rgba(255, 107, 53, 0.5);
+}
+.floating-cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--espresso-950);
+  font-size: 0.68rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg);
+}
+
+.scroll-top-btn {
+  position: fixed;
+  bottom: 92px;
+  right: 24px;
+  z-index: 1500;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: all 0.2s var(--ease-out);
+  opacity: 0;
+  pointer-events: none;
+}
+.scroll-top-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.scroll-top-btn:hover {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ── 404 page ── */
+.not-found {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 24px;
+  background: var(--bg);
+}
+.not-found-code {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(5rem, 14vw, 9rem);
+  line-height: 1;
+  background: linear-gradient(120deg, var(--brand), var(--gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.not-found h2 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-weight: 400;
+  color: var(--ink);
+  margin: 16px 0 8px;
+}
+.not-found p {
+  color: var(--muted);
+  max-width: 420px;
+  margin-bottom: 28px;
+}
+.not-found .lp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  color: #fff;
+  padding: 13px 28px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: none;
+}
+
+/* ── Wishlist page ── */
+.wishlist-page {
+  min-height: 70vh;
+  padding: 48px 24px;
+  background: var(--bg);
+}
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.wishlist-empty {
+  text-align: center;
+  padding: 80px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.wishlist-empty-icon { font-size: 3.5rem; margin-bottom: 16px; }
+.wishlist-empty h3 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.wishlist-empty p { color: var(--muted); margin-bottom: 24px; }

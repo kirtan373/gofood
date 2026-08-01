@@ -24,21 +24,21 @@ export default function SettingsPage() {
               <div className="admin-profile-row">
                 <FiUser size={16} />
                 <div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Name</div>
+                  <div style={{ fontSize: '0.72rem', color: '#a89b8b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Name</div>
                   <div style={{ fontWeight: 500 }}>{admin?.name || '---'}</div>
                 </div>
               </div>
               <div className="admin-profile-row">
                 <FiMail size={16} />
                 <div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Email</div>
+                  <div style={{ fontSize: '0.72rem', color: '#a89b8b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Email</div>
                   <div style={{ fontWeight: 500 }}>{admin?.email || '---'}</div>
                 </div>
               </div>
               <div className="admin-profile-row">
                 <FiShield size={16} />
                 <div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Role</div>
+                  <div style={{ fontSize: '0.72rem', color: '#a89b8b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Role</div>
                   <div>
                     <span style={{ background: '#dcfce7', color: '#15803d', padding: '3px 10px', borderRadius: 6, fontSize: '0.75rem', fontWeight: 700 }}>Administrator</span>
                   </div>
@@ -52,11 +52,11 @@ export default function SettingsPage() {
           <div className="admin-card">
             <div className="card-body" style={{ padding: '1.5rem' }}>
               <h5 style={{ fontWeight: 700, fontSize: '0.95rem', marginBottom: '0.75rem' }}>More Settings</h5>
-              <p style={{ color: '#64748b', fontSize: '0.88rem', marginBottom: '1rem' }}>
+              <p style={{ color: '#776c5f', fontSize: '0.88rem', marginBottom: '1rem' }}>
                 Theme, notification, and backup preferences will be added here in a future update.
               </p>
-              <div style={{ background: '#f8fafc', borderRadius: 10, padding: '1rem', border: '1px dashed #e2e8f0' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', fontSize: '0.85rem' }}>
+              <div style={{ background: '#faf7f2', borderRadius: 10, padding: '1rem', border: '1px dashed #eae2d6' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#776c5f', fontSize: '0.85rem' }}>
                   <FiLock size={14} />
                   <span>To change your password, use the <strong>Password</strong> button in the top navigation bar.</span>
                 </div>

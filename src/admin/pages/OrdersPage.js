@@ -78,7 +78,7 @@ export default function OrdersPage() {
       {/* Stats Row */}
       <div className="row g-2 mb-4">
         {[
-          { label: 'Total', value: stats.total, color: '#1e293b' },
+          { label: 'Total', value: stats.total, color: '#201a14' },
           { label: 'Pending', value: stats.Pending, color: '#f59e0b' },
           { label: 'Preparing', value: stats.Preparing, color: '#06b6d4' },
           { label: 'Out for Delivery', value: stats['Out for Delivery'], color: '#3b82f6' },
@@ -100,7 +100,7 @@ export default function OrdersPage() {
           <div className="row g-2 align-items-center">
             <div className="col-md-5">
               <div style={{ position: 'relative' }}>
-                <FiSearch style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                <FiSearch style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#a89b8b' }} />
                 <input className="form-control" style={{ paddingLeft: '2.25rem' }} placeholder="Search by customer email..." value={search} onChange={(e) => setSearch(e.target.value)} />
               </div>
             </div>
@@ -111,8 +111,8 @@ export default function OrdersPage() {
               </select>
             </div>
             <div className="col-md-3 text-end">
-              <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
-                Showing <strong style={{ color: '#1e293b' }}>{filteredOrders.length}</strong> of {orders.length}
+              <span style={{ fontSize: '0.82rem', color: '#776c5f' }}>
+                Showing <strong style={{ color: '#201a14' }}>{filteredOrders.length}</strong> of {orders.length}
               </span>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default function OrdersPage() {
 
       {/* Orders List */}
       {loading ? (
-        <div className="admin-empty-state"><div className="spinner-border" style={{ color: '#10b981' }} role="status" /></div>
+        <div className="admin-empty-state"><div className="spinner-border" style={{ color: '#ff6b35' }} role="status" /></div>
       ) : filteredOrders.length === 0 ? (
         <div className="admin-empty-state">
           <FiClipboard size={32} style={{ marginBottom: 8, opacity: 0.4 }} />
@@ -137,8 +137,8 @@ export default function OrdersPage() {
                 <div style={{
                   display: 'flex', flexWrap: 'wrap', alignItems: 'center',
                   justifyContent: 'space-between', gap: '0.75rem',
-                  padding: '0.85rem 1.25rem', borderBottom: '1px solid #f1f5f9',
-                  background: '#fafbfc'
+                  padding: '0.85rem 1.25rem', borderBottom: '1px solid #eae2d6',
+                  background: '#faf7f2'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -148,12 +148,12 @@ export default function OrdersPage() {
                       </span>
                     </div>
                     <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>{order.email}</span>
-                    <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{formatDate(order.order_date)}</span>
+                    <span style={{ fontSize: '0.8rem', color: '#a89b8b' }}>{formatDate(order.order_date)}</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontWeight: 700, fontSize: '1rem', color: '#10b981' }}>Rs. {order.total?.toLocaleString()}</div>
-                      <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>{order.items.length} item{order.items.length !== 1 ? 's' : ''}</div>
+                      <div style={{ fontWeight: 700, fontSize: '1rem', color: '#e14f1d' }}>Rs. {order.total?.toLocaleString()}</div>
+                      <div style={{ fontSize: '0.72rem', color: '#a89b8b' }}>{order.items.length} item{order.items.length !== 1 ? 's' : ''}</div>
                     </div>
                     <select
                       className="form-select form-select-sm"
@@ -171,7 +171,7 @@ export default function OrdersPage() {
                 <div style={{ padding: '0.75rem 1.25rem' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
-                      <tr style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8' }}>
+                      <tr style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a89b8b' }}>
                         <th style={{ textAlign: 'left', padding: '6px 0', fontWeight: 600 }}>Item</th>
                         <th style={{ textAlign: 'left', padding: '6px 12px', fontWeight: 600 }}>Size</th>
                         <th style={{ textAlign: 'center', padding: '6px 0', fontWeight: 600 }}>Qty</th>
@@ -180,9 +180,9 @@ export default function OrdersPage() {
                     </thead>
                     <tbody>
                       {order.items.map((item, iIdx) => (
-                        <tr key={iIdx} style={{ borderTop: '1px solid #f1f5f9' }}>
+                        <tr key={iIdx} style={{ borderTop: '1px solid #f3ede4' }}>
                           <td style={{ padding: '8px 0', fontSize: '0.88rem', fontWeight: 500 }}>{item.name || 'Item'}</td>
-                          <td style={{ padding: '8px 12px', fontSize: '0.85rem', color: '#64748b' }}>{item.size || '---'}</td>
+                          <td style={{ padding: '8px 12px', fontSize: '0.85rem', color: '#776c5f' }}>{item.size || '---'}</td>
                           <td style={{ padding: '8px 0', fontSize: '0.85rem', textAlign: 'center' }}>{item.qty || 1}</td>
                           <td style={{ padding: '8px 0', fontSize: '0.88rem', textAlign: 'right', fontWeight: 600 }}>
                             Rs. {((Number(item.price) || 0) * (Number(item.qty) || 1)).toLocaleString()}
@@ -195,25 +195,25 @@ export default function OrdersPage() {
 
                 {/* Delivery Info */}
                 {order.deliveryInfo && (
-                  <div style={{ margin: '0 1.25rem 1rem', padding: '0.85rem 1rem', background: '#f8fafb', borderRadius: 10, border: '1px dashed #e2e8f0' }}>
-                    <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8', fontWeight: 600, marginBottom: '0.5rem' }}>Delivery Details</div>
+                  <div style={{ margin: '0 1.25rem 1rem', padding: '0.85rem 1rem', background: '#faf7f2', borderRadius: 10, border: '1px dashed #eae2d6' }}>
+                    <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a89b8b', fontWeight: 600, marginBottom: '0.5rem' }}>Delivery Details</div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem 1.75rem', fontSize: '0.82rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                        <FiUser style={{ color: '#94a3b8', fontSize: '0.78rem' }} />
+                        <FiUser style={{ color: '#a89b8b', fontSize: '0.78rem' }} />
                         <span>{order.deliveryInfo.name}</span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                        <FiPhone style={{ color: '#94a3b8', fontSize: '0.78rem' }} />
+                        <FiPhone style={{ color: '#a89b8b', fontSize: '0.78rem' }} />
                         <span>{order.deliveryInfo.phone}</span>
                       </div>
                       <div style={{ width: '100%', display: 'flex', alignItems: 'flex-start', gap: 5 }}>
-                        <FiMapPin style={{ color: '#94a3b8', fontSize: '0.78rem', marginTop: 2, flexShrink: 0 }} />
+                        <FiMapPin style={{ color: '#a89b8b', fontSize: '0.78rem', marginTop: 2, flexShrink: 0 }} />
                         <span>{order.deliveryInfo.address}</span>
                       </div>
                       {order.deliveryInfo.notes && (
                         <div style={{ width: '100%', display: 'flex', alignItems: 'flex-start', gap: 5 }}>
-                          <FiMessageCircle style={{ color: '#94a3b8', fontSize: '0.78rem', marginTop: 2, flexShrink: 0 }} />
-                          <span style={{ fontStyle: 'italic', color: '#64748b' }}>{order.deliveryInfo.notes}</span>
+                          <FiMessageCircle style={{ color: '#a89b8b', fontSize: '0.78rem', marginTop: 2, flexShrink: 0 }} />
+                          <span style={{ fontStyle: 'italic', color: '#776c5f' }}>{order.deliveryInfo.notes}</span>
                         </div>
                       )}
                     </div>
@@ -222,10 +222,10 @@ export default function OrdersPage() {
 
                 {/* Payment Info */}
                 <div style={{ margin: '0 1.25rem 1rem', padding: '0.85rem 1rem', background: order.paymentMethod === 'cod' ? '#fffbeb' : '#f0fdf4', borderRadius: 10, border: `1px dashed ${order.paymentMethod === 'cod' ? '#fde68a' : '#bbf7d0'}` }}>
-                  <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8', fontWeight: 600, marginBottom: '0.5rem' }}>Payment Details</div>
+                  <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a89b8b', fontWeight: 600, marginBottom: '0.5rem' }}>Payment Details</div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem 1.75rem', fontSize: '0.82rem', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                      <FiCreditCard style={{ color: '#94a3b8', fontSize: '0.78rem' }} />
+                      <FiCreditCard style={{ color: '#a89b8b', fontSize: '0.78rem' }} />
                       <span style={{ fontWeight: 600 }}>Method:</span>
                       <span style={{
                         padding: '2px 8px',
@@ -242,9 +242,9 @@ export default function OrdersPage() {
                     </div>
                     {order.transactionId && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                        <FiHash style={{ color: '#94a3b8', fontSize: '0.78rem' }} />
+                        <FiHash style={{ color: '#a89b8b', fontSize: '0.78rem' }} />
                         <span style={{ fontWeight: 600 }}>Transaction ID:</span>
-                        <span style={{ fontFamily: "'SF Mono', 'Consolas', monospace", fontSize: '0.78rem', color: '#1e293b', background: '#fff', padding: '2px 8px', borderRadius: 4, border: '1px solid #e2e8f0' }}>
+                        <span style={{ fontFamily: "'SF Mono', 'Consolas', monospace", fontSize: '0.78rem', color: '#201a14', background: '#fff', padding: '2px 8px', borderRadius: 4, border: '1px solid #eae2d6' }}>
                           {order.transactionId}
                         </span>
                       </div>

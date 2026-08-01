@@ -109,13 +109,13 @@ export default function MyOrder() {
                 <div className="myorder-card-header">
                   <div className="myorder-card-date">
                     <div className="date-icon">
-                      <FiClock size={14} color="#22c55e" />
+                      <FiClock size={14} color="#ff6b35" />
                     </div>
                     <div>
-                      <div style={{ fontWeight: 600, color: '#1f2937', fontSize: '0.88rem' }}>
+                      <div style={{ fontWeight: 600, color: '#201a14', fontSize: '0.88rem' }}>
                         {formatDate(order.order_date)}
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
+                      <div style={{ fontSize: '0.75rem', color: '#a89b8b' }}>
                         {formatTime(order.order_date)}
                       </div>
                     </div>

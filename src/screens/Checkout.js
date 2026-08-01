@@ -2,6 +2,8 @@ import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import PaymentSuccessPopup from "../components/PaymentSuccessPopup";
+import ErrorPopup from "../components/ErrorPopup";
 import { useCart, useDispatchCart } from "../components/ContextReducer";
 import { useUserAuth } from "../context/UserAuthContext";
 import "./Checkout.css";
@@ -20,6 +22,12 @@ export default function Checkout() {
   const [processing, setProcessing] = useState(false);
   const [isFirstOrder, setIsFirstOrder] = useState(false);
   const [checkingFirstOrder, setCheckingFirstOrder] = useState(true);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successTxId, setSuccessTxId] = useState(null);
+  const [successTotal, setSuccessTotal] = useState(null);
+  const [showError, setShowError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({ name: false, phone: false, address: false });
 
   const [deliveryInfo, setDeliveryInfo] = useState({
     name: "",
@@ -68,19 +76,33 @@ export default function Checkout() {
   };
 
   const validateFields = () => {
+    const errors = { name: false, phone: false, address: false };
+    let msg = "";
+
     if (!deliveryInfo.name.trim()) {
-      alert("Please enter your full name.");
-      return false;
+      errors.name = true;
+      msg = "Please enter your full name.";
+    } else if (!deliveryInfo.phone.trim()) {
+      errors.phone = true;
+      msg = "Please enter your phone number.";
+    } else if (!deliveryInfo.address.trim()) {
+      errors.address = true;
+      msg = "Please enter your delivery address.";
     }
-    if (!deliveryInfo.phone.trim()) {
-      alert("Please enter your phone number.");
-      return false;
-    }
-    if (!deliveryInfo.address.trim()) {
-      alert("Please enter your delivery address.");
+
+    setFieldErrors(errors);
+    if (msg) {
+      setErrorMsg(msg);
+      setShowError(true);
       return false;
     }
     return true;
+  };
+
+  const clearFieldError = (field) => {
+    if (fieldErrors[field]) {
+      setFieldErrors((prev) => ({ ...prev, [field]: false }));
+    }
   };
 
   const saveOrder = async (txId) => {
@@ -113,13 +135,15 @@ export default function Checkout() {
 
   const handlePlaceOrder = async () => {
     if (cartData.length === 0) {
-      alert("Your cart is empty.");
+      setErrorMsg("Your cart is empty.");
+      setShowError(true);
       return;
     }
 
     const userEmail = localStorage.getItem("userEmail");
     if (!userEmail || !isLoggedIn) {
-      alert("Please log in to place an order.");
+      setErrorMsg("Please log in to place an order.");
+      setShowError(true);
       return;
     }
 
@@ -132,7 +156,8 @@ export default function Checkout() {
       const data = await res.json();
       if (!data.success) {
         logout();
-        alert(data.message || "This account no longer exists. It has been permanently deleted.");
+        setErrorMsg(data.message || "This account no longer exists. It has been permanently deleted.");
+        setShowError(true);
         navigate("/login", { replace: true });
         return;
       }
@@ -149,13 +174,16 @@ export default function Checkout() {
         const saved = await saveOrder(txId);
         if (saved) {
           dispatch({ type: "DROP" });
-          alert("Order placed successfully!");
-          navigate("/myOrder");
+          setSuccessTxId(txId);
+          setSuccessTotal(total);
+          setShowSuccess(true);
         } else {
-          alert("Failed to place order. Please try again.");
+          setErrorMsg("Failed to place order. Please try again.");
+          setShowError(true);
         }
       } catch {
-        alert("Something went wrong.");
+        setErrorMsg("Something went wrong.");
+        setShowError(true);
       } finally {
         setProcessing(false);
       }
@@ -192,7 +220,8 @@ export default function Checkout() {
           );
           window.location.href = data.data.payment_url;
         } else {
-          alert(data.message || "Khalti initiation failed.");
+          setErrorMsg(data.message || "Khalti initiation failed.");
+          setShowError(true);
           setProcessing(false);
         }
       } else if (paymentMethod === "esewa") {
@@ -223,13 +252,15 @@ export default function Checkout() {
           document.body.appendChild(form);
           form.submit();
         } else {
-          alert(data.message || "eSewa initiation failed.");
+          setErrorMsg(data.message || "eSewa initiation failed.");
+          setShowError(true);
           setProcessing(false);
         }
       }
     } catch (err) {
       console.error("Payment initiation error:", err);
-      alert("Something went wrong. Please try again.");
+      setErrorMsg("Something went wrong. Please try again.");
+      setShowError(true);
       setProcessing(false);
     }
   };
@@ -255,35 +286,47 @@ export default function Checkout() {
               </div>
 
               <div className="checkout-form-fields">
-                <div className="checkout-field">
+                <div className={`checkout-field ${fieldErrors.name ? "has-error" : ""}`}>
                   <label>Full Name</label>
                   <input
                     type="text"
                     placeholder="Enter your full name"
                     value={deliveryInfo.name}
-                    onChange={(e) => handleDeliveryChange("name", e.target.value)}
+                    onChange={(e) => {
+                      handleDeliveryChange("name", e.target.value);
+                      clearFieldError("name");
+                    }}
                   />
+                  {fieldErrors.name && <span className="checkout-field-error">Name is required</span>}
                 </div>
 
-                <div className="checkout-field">
+                <div className={`checkout-field ${fieldErrors.phone ? "has-error" : ""}`}>
                   <label>Phone Number</label>
                   <input
                     type="text"
                     placeholder="98XXXXXXXX"
                     value={deliveryInfo.phone}
-                    onChange={(e) => handleDeliveryChange("phone", e.target.value)}
+                    onChange={(e) => {
+                      handleDeliveryChange("phone", e.target.value);
+                      clearFieldError("phone");
+                    }}
                   />
+                  {fieldErrors.phone && <span className="checkout-field-error">Phone number is required</span>}
                 </div>
 
-                <div className="checkout-field">
+                <div className={`checkout-field ${fieldErrors.address ? "has-error" : ""}`}>
                   <label>Delivery Address</label>
                   <textarea
                     className="address-field"
                     rows="4"
                     placeholder="House No, Street, Area, City..."
                     value={deliveryInfo.address}
-                    onChange={(e) => handleDeliveryChange("address", e.target.value)}
+                    onChange={(e) => {
+                      handleDeliveryChange("address", e.target.value);
+                      clearFieldError("address");
+                    }}
                   />
+                  {fieldErrors.address && <span className="checkout-field-error">Delivery address is required</span>}
                 </div>
 
                 <div className="checkout-field">
@@ -368,7 +411,7 @@ export default function Checkout() {
                         <span>Rs. {subtotal}</span>
                       </div>
                       {isFirstOrder && discountAmount > 0 && (
-                        <div className="checkout-summary-row" style={{ color: '#22c55e' }}>
+                        <div className="checkout-summary-row" style={{ color: '#4ade80' }}>
                           <span>First Order Discount (30%)</span>
                           <span>- Rs. {discountAmount}</span>
                         </div>
@@ -407,6 +450,22 @@ export default function Checkout() {
       </main>
 
       <Footer />
+
+      <PaymentSuccessPopup
+        show={showSuccess}
+        transactionId={successTxId}
+        total={successTotal}
+        onClose={() => {
+          setShowSuccess(false);
+          navigate("/myOrder");
+        }}
+      />
+
+      <ErrorPopup
+        show={showError}
+        message={errorMsg}
+        onClose={() => setShowError(false)}
+      />
     </div>
   );
 }

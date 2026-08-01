@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=DM+Serif+Display&display=swap');
-
 /* ============================================
    LANDING PAGE
    ============================================ */
@@ -7,8 +5,8 @@
 .lp-page {
   min-height: 100vh;
   overflow-x: clip;
-  background: #faf6f1;
-  color: #1a1208;
+  background: var(--bg);
+  color: var(--ink);
   font-family: 'DM Sans', -apple-system, sans-serif;
 }
 
@@ -34,7 +32,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: #ff6b35;
+  color:   var(--brand);
   margin-bottom: 8px;
 }
 
@@ -42,7 +40,7 @@
   font-family: 'DM Serif Display', Georgia, serif;
   font-weight: 400;
   font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-  color: #1a1208;
+  color: var(--ink);
   letter-spacing: -0.01em;
 }
 
@@ -62,10 +60,11 @@
 }
 
 .lp-hero-bg {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .lp-hero-shape {
@@ -78,7 +77,7 @@
 .lp-hero-shape-1 {
   width: 600px;
   height: 600px;
-  background: #ff6b35;
+  background: var(--brand);
   top: -200px;
   right: -100px;
 }
@@ -86,7 +85,7 @@
 .lp-hero-shape-2 {
   width: 400px;
   height: 400px;
-  background: #5b7553;
+  background: var(--gold);
   bottom: -100px;
   left: -100px;
 }
@@ -94,7 +93,7 @@
 .lp-hero-shape-3 {
   width: 300px;
   height: 300px;
-  background: #c97f1f;
+  background: var(--espresso-600);
   top: 40%;
   left: 30%;
 }
@@ -102,6 +101,8 @@
 .lp-hero-content {
   flex: 1;
   max-width: 580px;
+  position: relative;
+  z-index: 1;
   animation: lp-fadeUp 0.8s ease-out;
 }
 
@@ -110,7 +111,7 @@
   align-items: center;
   gap: 8px;
   background: rgba(255, 107, 53, 0.1);
-  color: #ff6b35;
+  color:   var(--brand);
   font-weight: 600;
   font-size: 0.8rem;
   padding: 8px 18px;
@@ -124,19 +125,19 @@
   font-weight: 400;
   font-size: clamp(2.2rem, 5vw, 3.5rem);
   line-height: 1.15;
-  color: #1a1208;
+  color: var(--ink);
   margin-bottom: 20px;
   letter-spacing: -0.02em;
 }
 
 .lp-hero-highlight {
-  color: #ff6b35;
+  color:   var(--brand);
   position: relative;
 }
 
 .lp-hero-subtitle {
   font-size: 1.05rem;
-  color: #7a7068;
+  color: var(--muted);
   line-height: 1.7;
   margin-bottom: 32px;
   max-width: 480px;
@@ -150,18 +151,18 @@
   border-radius: 999px;
   padding: 6px 6px 6px 20px;
   box-shadow: 0 8px 40px rgba(26, 18, 8, 0.08);
-  border: 1.5px solid #ede5da;
+  border: 1.5px solid var(--border);
   margin-bottom: 20px;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .lp-hero-search:focus-within {
-  border-color: #ff6b35;
+  border-color:   var(--brand);
   box-shadow: 0 8px 40px rgba(255, 107, 53, 0.12);
 }
 
 .lp-search-icon {
-  color: #a39888;
+  color: var(--muted-light);
   font-size: 0.9rem;
   margin-right: 10px;
 }
@@ -173,19 +174,19 @@
   background: transparent;
   font-size: 0.95rem;
   font-family: inherit;
-  color: #1a1208;
+  color: var(--ink);
   min-width: 0;
 }
 
 .lp-hero-search input::placeholder {
-  color: #a39888;
+  color: var(--muted-light);
 }
 
 .lp-search-btn {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #ff6b35;
+  background:   var(--brand);
   color: #fff;
   border: none;
   padding: 12px 24px;
@@ -199,7 +200,7 @@
 }
 
 .lp-search-btn:hover {
-  background: #e55a2b;
+  background:   var(--brand-dark);
   transform: translateY(-1px);
 }
 
@@ -213,7 +214,7 @@
 
 .lp-hero-tags span {
   background: rgba(26, 18, 8, 0.04);
-  color: #7a7068;
+  color: var(--muted);
   padding: 6px 16px;
   border-radius: 999px;
   font-size: 0.8rem;
@@ -225,7 +226,7 @@
 
 .lp-hero-tags span:hover {
   background: rgba(255, 107, 53, 0.08);
-  color: #ff6b35;
+  color:   var(--brand);
   border-color: rgba(255, 107, 53, 0.2);
 }
 
@@ -240,19 +241,19 @@
   font-family: 'DM Serif Display', Georgia, serif;
   font-size: 1.6rem;
   font-weight: 400;
-  color: #1a1208;
+  color: var(--ink);
 }
 
 .lp-stat-label {
   font-size: 0.78rem;
-  color: #a39888;
+  color: var(--muted-light);
   font-weight: 500;
 }
 
 .lp-stat-divider {
   width: 1px;
   height: 40px;
-  background: #ede5da;
+  background: var(--border);
 }
 
 /* Hero Visual */
@@ -261,6 +262,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  z-index: 1;
   animation: lp-fadeUp 0.8s ease-out 0.2s both;
 }
 
@@ -288,13 +291,13 @@
   border-radius: 14px;
   font-size: 0.82rem;
   font-weight: 600;
-  color: #1a1208;
+  color: var(--ink);
   box-shadow: 0 8px 30px rgba(26, 18, 8, 0.1);
   animation: lp-float 3s ease-in-out infinite;
 }
 
 .lp-hero-float svg {
-  color: #ff6b35;
+  color:   var(--brand);
 }
 
 .lp-hero-float-1 {
@@ -314,7 +317,7 @@
    ============================================ */
 
 .lp-categories {
-  background: #f5ede3;
+  background: var(--bg-warm);
 }
 
 .lp-cat-grid {
@@ -351,7 +354,7 @@
 .lp-cat-name {
   font-weight: 600;
   font-size: 0.85rem;
-  color: #1a1208;
+  color: var(--ink);
 }
 
 /* ============================================
@@ -359,7 +362,7 @@
    ============================================ */
 
 .lp-how {
-  background: #faf6f1;
+  background: var(--bg);
 }
 
 .lp-steps {
@@ -380,7 +383,7 @@
   width: 64px;
   height: 64px;
   border-radius: 18px;
-  background: linear-gradient(135deg, #ff6b35, #e55a2b);
+  background: linear-gradient(135deg,   var(--brand),   var(--brand-dark));
   color: #fff;
   display: flex;
   align-items: center;
@@ -393,7 +396,7 @@
 .lp-step-num {
   font-family: 'DM Serif Display', Georgia, serif;
   font-size: 0.85rem;
-  color: #ff6b35;
+  color:   var(--brand);
   opacity: 0.6;
   margin-bottom: 8px;
 }
@@ -402,20 +405,20 @@
   font-family: 'DM Serif Display', Georgia, serif;
   font-weight: 400;
   font-size: 1.15rem;
-  color: #1a1208;
+  color: var(--ink);
   margin-bottom: 8px;
 }
 
 .lp-step p {
   font-size: 0.88rem;
-  color: #7a7068;
+  color: var(--muted);
   line-height: 1.6;
 }
 
 .lp-step-connector {
   width: 80px;
   height: 2px;
-  background: linear-gradient(90deg, #ede5da, #ff6b35, #ede5da);
+  background: linear-gradient(90deg, #ede5da,   var(--brand), #ede5da);
   margin-top: 32px;
   flex-shrink: 0;
 }
@@ -425,7 +428,7 @@
    ============================================ */
 
 .lp-popular {
-  background: #f5ede3;
+  background: var(--bg-warm);
 }
 
 .lp-popular-grid {
@@ -476,7 +479,7 @@
   font-family: 'DM Serif Display', Georgia, serif;
   font-weight: 400;
   font-size: 1rem;
-  color: #1a1208;
+  color: var(--ink);
   margin-bottom: 4px;
   white-space: nowrap;
   overflow: hidden;
@@ -485,7 +488,7 @@
 
 .lp-popular-category {
   font-size: 0.75rem;
-  color: #a39888;
+  color: var(--muted-light);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -494,7 +497,7 @@
 
 .lp-popular-price span {
   font-weight: 700;
-  color: #ff6b35;
+  color:   var(--brand);
   font-size: 0.95rem;
 }
 
@@ -507,7 +510,7 @@
    ============================================ */
 
 .lp-features {
-  background: #faf6f1;
+  background: var(--bg);
 }
 
 .lp-features-grid {
@@ -522,7 +525,7 @@
   background: #fff;
   border-radius: 18px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #ede5da;
+  border: 1px solid var(--border);
 }
 
 .lp-feature-card:hover {
@@ -546,13 +549,13 @@
   font-family: 'DM Serif Display', Georgia, serif;
   font-weight: 400;
   font-size: 1.05rem;
-  color: #1a1208;
+  color: var(--ink);
   margin-bottom: 8px;
 }
 
 .lp-feature-card p {
   font-size: 0.85rem;
-  color: #7a7068;
+  color: var(--muted);
   line-height: 1.6;
 }
 
@@ -561,14 +564,14 @@
    ============================================ */
 
 .lp-cta {
-  background: #faf6f1;
+  background: var(--bg);
   padding-bottom: 100px;
 }
 
 .lp-cta-card {
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #1a1208, #2d241a);
+  background: linear-gradient(135deg, var(--espresso-950), var(--espresso-700));
   border-radius: 28px;
   padding: 60px;
   gap: 60px;
@@ -581,7 +584,7 @@
   position: absolute;
   width: 300px;
   height: 300px;
-  background: #ff6b35;
+  background:   var(--brand);
   border-radius: 50%;
   filter: blur(100px);
   opacity: 0.2;
@@ -650,12 +653,12 @@
 }
 
 .lp-btn-primary {
-  background: #ff6b35;
+  background:   var(--brand);
   color: #fff;
 }
 
 .lp-btn-primary:hover {
-  background: #e55a2b;
+  background:   var(--brand-dark);
   transform: translateY(-1px);
   box-shadow: 0 8px 24px rgba(255, 107, 53, 0.3);
   color: #fff;
@@ -663,13 +666,13 @@
 
 .lp-btn-white {
   background: #fff;
-  color: #1a1208;
+  color: var(--ink);
 }
 
 .lp-btn-white:hover {
   background: #f5f5f5;
   transform: translateY(-1px);
-  color: #1a1208;
+  color: var(--ink);
 }
 
 .lp-btn-outline-white {
@@ -786,7 +789,7 @@
   .lp-step-connector {
     width: 2px;
     height: 40px;
-    background: linear-gradient(180deg, #ede5da, #ff6b35, #ede5da);
+    background: linear-gradient(180deg, #ede5da,   var(--brand), #ede5da);
     margin-top: 0;
   }
 

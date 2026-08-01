@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaShoppingCart, FaSignOutAlt, FaUser, FaMapMarkerAlt, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaShoppingCart, FaSignOutAlt, FaUser, FaMapMarkerAlt, FaEye, FaEyeSlash, FaUtensils, FaMoon, FaSun, FaHeart } from "react-icons/fa";
 import { useCart } from "./ContextReducer";
 import { useUserAuth } from "../context/UserAuthContext";
+import { useTheme } from "../context/ThemeContext";
+import { useFavorites } from "../context/FavoritesContext";
 import "./Navbar.css";
 
 export default function Navbar() {
@@ -15,6 +17,8 @@ export default function Navbar() {
   const cartData = useCart() || [];
   const navigate = useNavigate();
   const { isLoggedIn, userEmail, logout } = useUserAuth();
+  const { dark, toggleTheme } = useTheme();
+  const { count: favCount } = useFavorites();
   const userName = userEmail ? userEmail.split('@')[0] : "User";
   const userInitial = userName.charAt(0);
 
@@ -84,8 +88,10 @@ export default function Navbar() {
       <nav className="nb-nav">
         <div className="nb-inner">
           <Link className="nb-brand" to="/">
-            <span className="nb-brand-icon">🍽️</span>
-            GoFood
+            <span className="nb-brand-mark">
+              <FaUtensils />
+            </span>
+            <span className="nb-brand-name">Mitho</span>
           </Link>
 
           <button
@@ -102,6 +108,11 @@ export default function Navbar() {
             <Link className="nb-link active" to="/menu" onClick={() => setMenuOpen(false)}>
               Menu
             </Link>
+            <Link className="nb-link" to="/wishlist" onClick={() => setMenuOpen(false)}>
+              <FaHeart />
+              Wishlist
+              {favCount > 0 && <span className="nb-cart-badge">{favCount}</span>}
+            </Link>
             {isLoggedIn && (
               <Link className="nb-link" to="/myOrder" onClick={() => setMenuOpen(false)}>
                 My Orders
@@ -110,6 +121,14 @@ export default function Navbar() {
           </div>
 
           <div className={`nb-menu ${menuOpen ? 'open' : ''}`}>
+            <button
+              className="nb-btn nb-btn-ghost nb-btn-icon"
+              aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+              title={dark ? 'Light mode' : 'Dark mode'}
+              onClick={toggleTheme}
+            >
+              {dark ? <FaSun /> : <FaMoon />}
+            </button>
             {!isLoggedIn ? (
               <div className="nb-auth-buttons">
                 <Link to="/login" className="nb-btn nb-btn-primary">

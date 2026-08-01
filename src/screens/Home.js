@@ -5,6 +5,9 @@ import "./Home.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Card from "../components/Card";
+import RecentlyViewed from "../components/RecentlyViewed";
+import { SkeletonGrid } from "../components/Skeleton";
+import { usePageMeta } from "../utils/usePageMeta";
 
 import Hero from "./Hero";
 import Categories from "./Categories";
@@ -12,11 +15,22 @@ import Offers from "./Offers";
 import Reviews from "./Reviews";
 import WhyChooseUs from "./WhyChooseUs";
 
+function safeId(name) {
+  return name.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase();
+}
+
 export default function Home() {
   const [searchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [foodCat, setFoodCat] = useState([]);
   const [foodItem, setFoodItem] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  usePageMeta({
+    title: "Menu | Mitho",
+    description:
+      "Browse the full Mitho menu — 200+ items across pizza, burgers, momos, biryani and more, delivered hot and fresh.",
+  });
 
   const loadData = async () => {
     try {
@@ -33,6 +47,8 @@ export default function Home() {
       setFoodCat(response[1] || []);
     } catch (err) {
       console.error("Error loading food data:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -40,7 +56,16 @@ export default function Home() {
     loadData();
   }, []);
 
-  // Scroll reveal observer
+  useEffect(() => {
+    setSearch(searchParams.get("search") || "");
+  }, [searchParams]);
+
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -57,7 +82,26 @@ export default function Home() {
     elements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, [foodCat, foodItem]);
+  }, [foodCat, foodItem, search]);
+
+  const searchLower = debouncedSearch.toLowerCase().trim();
+
+  const matchesSearch = (item) => {
+    if (!searchLower) return true;
+    return (
+      item.name.toLowerCase().includes(searchLower) ||
+      (item.description && item.description.toLowerCase().includes(searchLower)) ||
+      item.CategoryName.toLowerCase().includes(searchLower)
+    );
+  };
+
+  const handleCategoryClick = (categoryName) => {
+    setSearch(categoryName);
+    const el = document.getElementById("menu");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const totalResults = foodItem.filter(matchesSearch).length;
 
   return (
     <div className="home-page">
@@ -65,16 +109,51 @@ export default function Home() {
 
       <Hero search={search} setSearch={setSearch} />
 
-      <Categories categories={foodCat} />
+      <RecentlyViewed foodItems={foodItem} />
+
+      <Categories
+        categories={foodCat}
+        activeCategory={search}
+        onCategoryClick={handleCategoryClick}
+      />
 
       <Offers />
 
       <section id="menu" className="menu-section">
-        {foodCat.map((cat) => {
+        {searchLower && (
+          <div className="category-filter-bar">
+            <button
+              className="filter-pill"
+              onClick={() => setSearch("")}
+            >
+              All
+            </button>
+            {foodCat.map((cat) => (
+              <button
+                key={cat._id}
+                className={`filter-pill ${cat.CategoryName.toLowerCase().includes(searchLower) ? "active" : ""}`}
+                onClick={() => handleCategoryClick(cat.CategoryName)}
+              >
+                <span className="filter-pill-icon">{cat.icon || "🍽️"}</span>
+                {cat.CategoryName}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {searchLower && (
+          <p className="search-results-count">
+            {totalResults} {totalResults === 1 ? "item" : "items"} found for "<strong>{search}</strong>"
+          </p>
+        )}
+
+        {loading ? (
+          <SkeletonGrid count={8} />
+        ) : (
+        foodCat.map((cat) => {
           const items = foodItem.filter(
             (item) =>
-              item.CategoryName === cat.CategoryName &&
-              item.name.toLowerCase().includes(search.toLowerCase())
+              item.CategoryName === cat.CategoryName && matchesSearch(item)
           );
 
           if (items.length === 0) return null;
@@ -82,7 +161,7 @@ export default function Home() {
           return (
             <div key={cat._id} className="mb-5">
               <h2
-                id={cat.CategoryName.toLowerCase()}
+                id={safeId(cat.CategoryName)}
                 className="category-title reveal"
               >
                 {cat.CategoryName}
@@ -101,7 +180,19 @@ export default function Home() {
               </div>
             </div>
           );
-        })}
+        })
+        )}
+
+        {searchLower && totalResults === 0 && (
+          <div className="no-results">
+            <div className="no-results-icon">🔍</div>
+            <h3>No items found for "{search}"</h3>
+            <p>Try searching for something else like chicken, pizza, or cake.</p>
+            <button className="filter-pill" onClick={() => setSearch("")}>
+              Show All Items
+            </button>
+          </div>
+        )}
       </section>
 
       <WhyChooseUs />

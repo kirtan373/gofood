@@ -1,31 +1,25 @@
+import React, { Suspense, lazy } from 'react';
 import './App.css';
-import Landing from './screens/Landing';
-import Home from './screens/Home';
-import ProductDetails from './screens/ProductDetails';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
 } from "react-router-dom";
 
-import Login from './screens/Login';
-import Signup from './screens/Signup';
-import ForgotPassword from './screens/ForgotPassword';
-import MyOrder from './screens/MyOrder';
-import Checkout from './screens/Checkout';
-import Cart from './screens/Cart';
-import PaymentStatus from './screens/PaymentStatus';
-
 import '../node_modules/bootstrap-dark-5/dist/css/bootstrap-dark.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import { CartProvider } from './components/ContextReducer';
 import { ToastProvider } from './components/Toast';
+import { ThemeProvider } from './context/ThemeContext';
+import { FavoritesProvider } from './context/FavoritesContext';
 import { AdminAuthProvider } from './admin/context/AdminAuthContext';
 import { UserAuthProvider } from './context/UserAuthContext';
 
 import ProtectedRoute from './admin/components/ProtectedRoute';
 import AdminLayout from './admin/components/AdminLayout';
+import GlobalUI from './components/GlobalUI';
+import NotFound from './components/NotFound';
 
 import AdminLogin from './admin/pages/AdminLogin';
 import AdminDashboardPage from './admin/pages/AdminDashboardPage';
@@ -37,13 +31,38 @@ import RevenuePage from './admin/pages/RevenuePage';
 import SettingsPage from './admin/pages/SettingsPage';
 import ReviewsPage from './admin/pages/ReviewsPage';
 
+// Code-split the storefront so the initial bundle stays lean.
+const Landing = lazy(() => import('./screens/Landing'));
+const Home = lazy(() => import('./screens/Home'));
+const ProductDetails = lazy(() => import('./screens/ProductDetails'));
+const Login = lazy(() => import('./screens/Login'));
+const Signup = lazy(() => import('./screens/Signup'));
+const ForgotPassword = lazy(() => import('./screens/ForgotPassword'));
+const MyOrder = lazy(() => import('./screens/MyOrder'));
+const Checkout = lazy(() => import('./screens/Checkout'));
+const Cart = lazy(() => import('./screens/Cart'));
+const PaymentStatus = lazy(() => import('./screens/PaymentStatus'));
+const Wishlist = lazy(() => import('./screens/Wishlist'));
+
+function PageLoader() {
+  return (
+    <div className="app-loader">
+      <div className="app-loader-spinner"></div>
+      <p>Loading Delicious Food...</p>
+    </div>
+  );
+}
+
 function App() {
   return (
+    <ThemeProvider>
     <ToastProvider>
     <CartProvider>
+      <FavoritesProvider>
       <AdminAuthProvider>
         <Router>
           <UserAuthProvider>
+          <Suspense fallback={<PageLoader />}>
           <Routes>
 
             {/* User Routes */}
@@ -54,6 +73,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/myOrder" element={<MyOrder />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/payment/status" element={<PaymentStatus />} />
             <Route path="/payment/status/:gateway" element={<PaymentStatus />} />
@@ -83,12 +103,19 @@ function App() {
               <Route path="settings" element={<SettingsPage />} />
             </Route>
 
+            {/* 404 */}
+            <Route path="*" element={<NotFound />} />
+
           </Routes>
+          </Suspense>
+          <GlobalUI />
           </UserAuthProvider>
         </Router>
       </AdminAuthProvider>
+      </FavoritesProvider>
     </CartProvider>
     </ToastProvider>
+    </ThemeProvider>
   );
 }
 

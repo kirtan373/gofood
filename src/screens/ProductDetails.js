@@ -3,19 +3,46 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./ProductsDetails.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import FoodRow from "../components/FoodRow";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useFavorites } from "../context/FavoritesContext";
+import { recordRecentView } from "../utils/recentlyViewed";
+import { usePageMeta } from "../utils/usePageMeta";
 
 export default function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
+  const [related, setRelated] = useState([]);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   useEffect(() => {
-    fetch(`http://localhost:5001/api/product/${id}`)
-      .then((res) => res.json())
-      .then((data) => setProduct(data))
+    Promise.all([
+      fetch(`http://localhost:5001/api/product/${id}`),
+      fetch(`http://localhost:5001/api/related/${id}`),
+    ])
+      .then(async ([prodRes, relRes]) => {
+        const prodData = await prodRes.json();
+        if (prodData && prodData._id) {
+          setProduct(prodData);
+          recordRecentView(prodData);
+        }
+        try {
+          const relData = await relRes.json();
+          if (relData && relData.related) setRelated(relData.related);
+        } catch {}
+      })
       .catch((err) => console.log(err));
   }, [id]);
+
+  usePageMeta({
+    title: product ? `${product.name} | Mitho` : 'Loading | Mitho',
+    description: product
+      ? `${product.description || `${product.name} at Mitho.`} Order hot & fresh delivery.`
+      : 'Order delicious food from Mitho.',
+    ogImage: product ? product.img : undefined,
+  });
 
   if (!product) {
     return (
@@ -28,6 +55,7 @@ export default function ProductDetails() {
 
   const options = product.options || {};
   const sizes = Object.keys(options);
+  const fav = isFavorite(product._id);
 
   return (
     <div className="pd-page">
@@ -51,6 +79,14 @@ export default function ProductDetails() {
             <div className="pd-image-col">
               <div className="pd-image-wrapper">
                 <span className="pd-badge">Chef's Choice</span>
+                <button
+                  className={`gf-fav-btn ${fav ? 'gf-fav-active' : ''}`}
+                  aria-label={fav ? 'Remove from wishlist' : 'Add to wishlist'}
+                  style={{ top: '16px', right: '16px', width: '40px', height: '40px', fontSize: '1rem' }}
+                  onClick={() => toggleFavorite(product)}
+                >
+                  {fav ? <FaHeart /> : <FaRegHeart />}
+                </button>
                 <img src={product.img} alt={product.name} className="pd-food-img" />
               </div>
             </div>
@@ -104,7 +140,7 @@ export default function ProductDetails() {
                   <div className="pd-restaurant-card">
                     <div className="pd-restaurant-header">
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg>
-                      <h5>GoFood Restaurant</h5>
+                      <h5>Mitho Restaurant</h5>
                     </div>
                     <p>Freshly prepared using premium ingredients with professional chefs ensuring delicious taste and hygiene.</p>
                   </div>
@@ -121,6 +157,18 @@ export default function ProductDetails() {
           </div>
         </div>
       </div>
+
+      {related.length > 0 && (
+        <FoodRow
+          label="Frequently Bought Together"
+          title="You May Also Like"
+          items={related}
+          linkText="View all"
+          linkTo="/menu"
+          loading={false}
+          id="related"
+        />
+      )}
 
       <Footer />
     </div>

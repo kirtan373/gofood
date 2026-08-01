@@ -1,37 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaSearch, FaArrowRight, FaTruck, FaShieldAlt, FaCreditCard, FaShoppingBag, FaClock, FaFire } from 'react-icons/fa';
+import { FaSearch, FaArrowRight, FaTruck, FaShieldAlt, FaCreditCard, FaShoppingBag, FaFire } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import PromoSlider from '../components/PromoSlider';
+import FoodRow from '../components/FoodRow';
+import { SkeletonCircle } from '../components/Skeleton';
+import { usePageMeta } from '../utils/usePageMeta';
 import './Landing.css';
 
 const API = 'http://localhost:5001/api';
 
-const CATEGORIES = [
-  { name: 'Pizza', emoji: '\uD83C\uDF55', color: '#ff6b35' },
-  { name: 'Burger', emoji: '\uD83C\uDF54', color: '#e55a2b' },
-  { name: 'Momos', emoji: '\uD83E\uDD5F', color: '#5b7553' },
-  { name: 'Biryani', emoji: '\uD83C\uDF5A', color: '#c97f1f' },
-  { name: 'Chinese', emoji: '\uD83C\uDF5C', color: '#0e7490' },
-  { name: 'Dessert', emoji: '\uD83C\uDF70', color: '#c1432e' },
-];
+const CATEGORY_COLORS = {
+  Pizza: '#ff6b35',
+  Burger: '#e14f1d',
+  Momos: '#7a8b5f',
+  Biryani: '#e8a33d',
+  Chinese: '#b3452e',
+  Drinks: '#d97e3d',
+  Dessert: '#c9524f',
+};
+
+function pickByFlag(items, flag, fallback, count = 8) {
+  const flagged = items.filter((i) => i[flag]);
+  const source = flagged.length > 0 ? flagged : fallback;
+  return source.slice(0, count);
+}
 
 export default function Landing() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
-  const [popularItems, setPopularItems] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [foodItems, setFoodItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  usePageMeta({
+    title: 'Mitho | Delicious Food, Delivered Fast',
+    description:
+      'Order from the best restaurants in Kathmandu — hot & fresh delivery in under 30 minutes. Explore pizza, momos, burgers and more.',
+    ogImage:
+      'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=600&fit=crop',
+  });
 
   useEffect(() => {
-    const fetchFood = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch(`${API}/foodData`, { method: 'POST' });
-        const data = await res.json();
-        const items = data[1] || [];
-        const shuffled = [...items].sort(() => 0.5 - Math.random());
-        setPopularItems(shuffled.slice(0, 8));
-      } catch {}
+        const [catRes, foodRes] = await Promise.all([
+          fetch(`${API}/categories`),
+          fetch(`${API}/foodData`, { method: 'POST' }),
+        ]);
+        const catData = await catRes.json();
+        const foodData = await foodRes.json();
+        setCategories(catData.categories || []);
+        setFoodItems(foodData[0] || []);
+      } catch {} finally {
+        setLoading(false);
+      }
     };
-    fetchFood();
+    fetchData();
   }, []);
 
   const handleSearch = (e) => {
@@ -42,6 +68,14 @@ export default function Landing() {
       navigate('/menu');
     }
   };
+
+  const shuffled = [...foodItems].sort(() => 0.5 - Math.random());
+  const popularItems = shuffled.slice(0, 8);
+
+  const trending = pickByFlag(foodItems, 'isTrending', popularItems);
+  const bestSellers = pickByFlag(foodItems, 'isBestSeller', popularItems);
+  const specials = pickByFlag(foodItems, 'isTodaysSpecial', popularItems);
+  const featured = pickByFlag(foodItems, 'isFeatured', popularItems);
 
   return (
     <div className="lp-page">
@@ -83,11 +117,11 @@ export default function Landing() {
           </form>
 
           <div className="lp-hero-tags">
-            <span onClick={() => navigate('/menu?search=pizza')}>Pizza</span>
-            <span onClick={() => navigate('/menu?search=momo')}>Momos</span>
-            <span onClick={() => navigate('/menu?search=burger')}>Burger</span>
-            <span onClick={() => navigate('/menu?search=biryani')}>Biryani</span>
-            <span onClick={() => navigate('/menu?search=chinese')}>Chinese</span>
+            {categories.slice(0, 5).map((cat) => (
+              <span key={cat._id} onClick={() => navigate(`/menu?search=${encodeURIComponent(cat.CategoryName.toLowerCase())}`)}>
+                {cat.CategoryName}
+              </span>
+            ))}
           </div>
 
           <div className="lp-hero-stats">
@@ -122,6 +156,9 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ── Promotional Banner Slider ── */}
+      <PromoSlider />
+
       {/* ── Categories Section ── */}
       <section className="lp-section lp-categories">
         <div className="lp-container">
@@ -129,21 +166,70 @@ export default function Landing() {
             <span className="lp-section-label">Browse</span>
             <h2 className="lp-section-title">Explore Categories</h2>
           </div>
-          <div className="lp-cat-grid">
-            {CATEGORIES.map((cat, i) => (
-              <Link
-                key={cat.name}
-                to={`/menu?search=${cat.name.toLowerCase()}`}
-                className="lp-cat-card"
-                style={{ '--cat-color': cat.color, animationDelay: `${i * 0.08}s` }}
-              >
-                <div className="lp-cat-emoji">{cat.emoji}</div>
-                <div className="lp-cat-name">{cat.name}</div>
-              </Link>
-            ))}
-          </div>
+          {loading ? (
+            <div className="lp-cat-grid">
+              {Array.from({ length: 6 }, (_, i) => (
+                <div key={i} className="lp-cat-card" style={{ padding: '24px 16px' }}>
+                  <SkeletonCircle size={56} />
+                  <div className="gf-skeleton gf-skeleton--line short" style={{ margin: '0 auto' }} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="lp-cat-grid">
+              {categories.map((cat, i) => (
+                <Link
+                  key={cat._id}
+                  to={`/menu?search=${encodeURIComponent(cat.CategoryName.toLowerCase())}`}
+                  className="lp-cat-card"
+                  style={{ '--cat-color': CATEGORY_COLORS[cat.CategoryName] || '#6b7280', animationDelay: `${i * 0.08}s` }}
+                >
+                  <div className="lp-cat-emoji">{cat.icon || '🍽️'}</div>
+                  <div className="lp-cat-name">{cat.CategoryName}</div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
+
+      {/* ── Smart Food Rows ── */}
+      <FoodRow
+        label="Trending Now"
+        title="Trending Dishes"
+        items={trending}
+        linkText="View all"
+        linkTo="/menu"
+        badge="Trending"
+        loading={loading}
+      />
+      <FoodRow
+        label="Favourites"
+        title="Best Sellers"
+        items={bestSellers}
+        linkText="View all"
+        linkTo="/menu"
+        badge="Best Seller"
+        loading={loading}
+      />
+      <FoodRow
+        label="Chef's Pick"
+        title="Today's Specials"
+        items={specials}
+        linkText="View all"
+        linkTo="/menu"
+        badge="Special"
+        loading={loading}
+      />
+      <FoodRow
+        label="Handpicked"
+        title="Featured Foods"
+        items={featured}
+        linkText="View all"
+        linkTo="/menu"
+        badge="Featured"
+        loading={loading}
+      />
 
       {/* ── How It Works ── */}
       <section className="lp-section lp-how">
@@ -178,11 +264,11 @@ export default function Landing() {
       </section>
 
       {/* ── Popular Items Preview ── */}
-      {popularItems.length > 0 && (
+      {!loading && popularItems.length > 0 && (
         <section className="lp-section lp-popular">
           <div className="lp-container">
             <div className="lp-section-header">
-              <span className="lp-section-label">Trending Now</span>
+              <span className="lp-section-label">Loved By Everyone</span>
               <h2 className="lp-section-title">Popular Items</h2>
             </div>
             <div className="lp-popular-grid">
@@ -194,7 +280,7 @@ export default function Landing() {
                   style={{ animationDelay: `${i * 0.06}s` }}
                 >
                   <div className="lp-popular-img-wrap">
-                    <img src={item.img} alt={item.name} />
+                    <img loading="lazy" src={item.img} alt={item.name} />
                   </div>
                   <div className="lp-popular-info">
                     <h4>{item.name}</h4>
@@ -222,7 +308,7 @@ export default function Landing() {
         <div className="lp-container">
           <div className="lp-section-header">
             <span className="lp-section-label">Our Promise</span>
-            <h2 className="lp-section-title">Why Choose GoFood</h2>
+            <h2 className="lp-section-title">Why Choose Mitho</h2>
           </div>
           <div className="lp-features-grid">
             <div className="lp-feature-card">
@@ -233,25 +319,25 @@ export default function Landing() {
               <p>Hot and fresh food delivered to your door in under 30 minutes, every time.</p>
             </div>
             <div className="lp-feature-card">
-              <div className="lp-feature-icon" style={{ background: 'rgba(91,117,83,0.1)', color: '#5b7553' }}>
+              <div className="lp-feature-icon" style={{ background: 'rgba(232,163,61,0.12)', color: '#e8a33d' }}>
                 <FaShieldAlt />
               </div>
               <h3>Premium Quality</h3>
               <p>Handpicked ingredients, expert chefs, and strict quality control on every order.</p>
             </div>
             <div className="lp-feature-card">
-              <div className="lp-feature-icon" style={{ background: 'rgba(201,127,31,0.1)', color: '#c97f1f' }}>
+              <div className="lp-feature-icon" style={{ background: 'rgba(58,48,38,0.08)', color: '#3a3026' }}>
                 <FaCreditCard />
               </div>
               <h3>Secure Payment</h3>
-              <p>Pay with eSewa, Khalti, or cash on delivery — your choice, your comfort.</p>
+              <p>Pay with eSewa or cash on delivery — your choice, your comfort.</p>
             </div>
             <div className="lp-feature-card">
-              <div className="lp-feature-icon" style={{ background: 'rgba(193,67,46,0.1)', color: '#c1432e' }}>
+              <div className="lp-feature-icon" style={{ background: 'rgba(225,79,29,0.1)', color: '#e14f1d' }}>
                 <FaShoppingBag />
               </div>
               <h3>First Order Discount</h3>
-              <p>Get 30% off on your very first order. Welcome to the GoFood family!</p>
+              <p>Get 30% off on your very first order. Welcome to the Mitho family!</p>
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useSearchParams, useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import PaymentSuccessPopup from "../components/PaymentSuccessPopup";
 import { useDispatchCart } from "../components/ContextReducer";
 import "./Checkout.css";
 
@@ -15,6 +16,8 @@ export default function PaymentStatus() {
   const [status, setStatus] = useState("verifying");
   const [message, setMessage] = useState("Verifying your payment...");
   const [transactionId, setTransactionId] = useState(null);
+  const [successTotal, setSuccessTotal] = useState(null);
+  const [showSuccess, setShowSuccess] = useState(false);
   const hasRun = useRef(false);
 
   useEffect(() => {
@@ -75,8 +78,10 @@ export default function PaymentStatus() {
               await saveOrder(cartData, orderId, txCode, paymentMethod || "esewa", deliveryInfo);
             }
             setTransactionId(txCode);
+            setSuccessTotal(total || null);
             setStatus("success");
             setMessage("Payment successful via eSewa!");
+            setTimeout(() => setShowSuccess(true), 300);
           } else {
             setStatus("failed");
             setMessage(`Verification failed: ${result.message || result.status || "Unknown"}`);
@@ -123,8 +128,10 @@ export default function PaymentStatus() {
               await saveOrder(cartData, orderId, txCode, paymentMethod || "khalti", deliveryInfo);
             }
             setTransactionId(txCode);
+            setSuccessTotal(total || null);
             setStatus("success");
             setMessage("Payment successful via Khalti!");
+            setTimeout(() => setShowSuccess(true), 300);
           } else {
             setStatus("failed");
             setMessage(`Payment status: ${data.status || "Unknown"}`);
@@ -193,14 +200,14 @@ export default function PaymentStatus() {
           {status === "success" && transactionId && (
             <div style={{
               display: 'flex', alignItems: 'center', gap: 8,
-              background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8,
+              background: 'rgba(47,158,68,0.12)', border: '1px solid rgba(47,158,68,0.35)', borderRadius: 10,
               padding: '10px 16px', marginBottom: '1.25rem', fontSize: '0.85rem'
             }}>
-              <span style={{ color: '#64748b', fontWeight: 500 }}>Transaction ID:</span>
+              <span style={{ color: 'rgba(250,247,242,0.6)', fontWeight: 500 }}>Transaction ID:</span>
               <span style={{
                 fontFamily: "'SF Mono', 'Consolas', monospace", fontWeight: 700,
-                color: '#15803d', background: '#fff', padding: '3px 10px',
-                borderRadius: 4, border: '1px solid #bbf7d0', fontSize: '0.82rem',
+                color: '#4ade80', background: 'rgba(250,247,242,0.05)', padding: '3px 10px',
+                borderRadius: 6, border: '1px solid rgba(47,158,68,0.35)', fontSize: '0.82rem',
                 letterSpacing: '0.02em'
               }}>
                 {transactionId}
@@ -235,6 +242,17 @@ export default function PaymentStatus() {
         </div>
       </main>
       <Footer />
+
+      <PaymentSuccessPopup
+        show={showSuccess}
+        transactionId={transactionId}
+        total={successTotal}
+        onClose={() => {
+          setShowSuccess(false);
+          localStorage.removeItem("pendingOrder");
+          navigate("/myOrder");
+        }}
+      />
     </div>
   );
 }

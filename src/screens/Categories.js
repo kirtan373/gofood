@@ -5,10 +5,11 @@ const fallbackIcons = {
   Pizza: "🍕",
   Burger: "🍔",
   Biryani: "🍛",
+  Momos: "🥟",
+  "Mo:Mo": "🥟",
+  Chinese: "🍜",
   Drinks: "🥤",
   Dessert: "🍰",
-  Momo: "🥟",
-  "Mo:Mo": "🥟",
   Chicken: "🍗",
   Pasta: "🍝",
   Sandwich: "🥪",
@@ -24,7 +25,7 @@ const fallbackIcons = {
   BubbleTea: "🧋",
 };
 
-export default function Categories({ categories }) {
+export default function Categories({ categories, activeCategory, onCategoryClick }) {
   return (
     <section className="quick-categories container">
       <div className="section-header">
@@ -39,12 +40,8 @@ export default function Categories({ categories }) {
             className={`col-6 col-md-4 col-lg-2 reveal reveal-delay-${Math.min(index + 1, 4)}`}
           >
             <div
-              className="category-box"
-              onClick={() => {
-                document
-                  .getElementById(cat.CategoryName.toLowerCase())
-                  ?.scrollIntoView({ behavior: "smooth" });
-              }}
+              className={`category-box ${activeCategory === cat.CategoryName ? "category-active" : ""}`}
+              onClick={() => onCategoryClick(cat.CategoryName)}
             >
               <div className="category-icon">
                 {cat.icon || fallbackIcons[cat.CategoryName] || "🍽️"}

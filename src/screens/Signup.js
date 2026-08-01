@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaLock, FaMapMarkerAlt, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaLock, FaMapMarkerAlt, FaEye, FaEyeSlash, FaUtensils, FaGift, FaTruck, FaStar } from 'react-icons/fa';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -66,22 +66,24 @@ export default function Signup() {
         {/* Left Panel */}
         <div style={styles.leftPanel}>
           <div style={styles.leftContent}>
-            <div style={styles.brandMark}>🍽️</div>
-            <h1 style={styles.brandTitle}>GoFood</h1>
+            <div style={styles.brandMark}>
+              <FaUtensils />
+            </div>
+            <h1 style={styles.brandTitle}>Mitho</h1>
             <p style={styles.brandTagline}>
               Join thousands of food lovers who order fresh meals every day
             </p>
             <div style={styles.features}>
               <div style={styles.featureItem}>
-                <span style={styles.featureIcon}>🎉</span>
+                <span style={styles.featureIcon}><FaGift /></span>
                 <span>Exclusive member discounts</span>
               </div>
               <div style={styles.featureItem}>
-                <span style={styles.featureIcon}>📦</span>
+                <span style={styles.featureIcon}><FaTruck /></span>
                 <span>Track orders in real time</span>
               </div>
               <div style={styles.featureItem}>
-                <span style={styles.featureIcon}>⭐</span>
+                <span style={styles.featureIcon}><FaStar /></span>
                 <span>Rate and review dishes</span>
               </div>
             </div>
@@ -220,7 +222,7 @@ export default function Signup() {
 const styles = {
   page: {
     minHeight: "100vh",
-    background: "#f0f2f5",
+    background: "var(--bg)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -231,14 +233,15 @@ const styles = {
     width: "100%",
     maxWidth: "900px",
     minHeight: "620px",
-    borderRadius: "16px",
+    borderRadius: "20px",
     overflow: "hidden",
-    boxShadow: "0 20px 60px rgba(0,0,0,0.12)",
+    boxShadow: "0 24px 60px rgba(32, 26, 20, 0.14)",
     background: "#fff",
   },
   leftPanel: {
     flex: "1",
-    background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+    background:
+      "radial-gradient(600px 300px at 110% 0%, rgba(255, 107, 53, 0.28), transparent 60%), radial-gradient(500px 260px at -10% 110%, rgba(232, 163, 61, 0.18), transparent 60%), linear-gradient(160deg, #120e0a 0%, #1f1913 60%, #241d14 100%)",
     color: "#fff",
     padding: "3rem 2.5rem",
     display: "flex",
@@ -258,20 +261,31 @@ const styles = {
     zIndex: 1,
   },
   brandMark: {
-    fontSize: "2.5rem",
-    marginBottom: "0.5rem",
+    width: "52px",
+    height: "52px",
+    borderRadius: "14px",
+    backgroundImage: "linear-gradient(135deg, #ff6b35 0%, #e14f1d 100%)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "1.3rem",
+    marginBottom: "1.25rem",
+    boxShadow: "0 8px 24px rgba(255, 107, 53, 0.35)",
   },
   brandTitle: {
+    fontFamily: "'DM Serif Display', Georgia, serif",
+    fontWeight: "400",
     fontSize: "2rem",
-    fontWeight: "700",
     margin: "0 0 0.5rem 0",
-    letterSpacing: "-0.02em",
+    letterSpacing: "-0.01em",
+    color: "#fff",
   },
   brandTagline: {
     fontSize: "0.95rem",
-    opacity: 0.8,
+    opacity: 0.75,
     margin: "0 0 2.5rem 0",
     lineHeight: 1.6,
+    color: "rgba(250, 247, 242, 0.75)",
   },
   features: {
     display: "flex",
@@ -284,15 +298,17 @@ const styles = {
     gap: "0.75rem",
     fontSize: "0.9rem",
     opacity: 0.85,
+    color: "rgba(250, 247, 242, 0.85)",
   },
   featureIcon: {
-    fontSize: "1.1rem",
+    fontSize: "0.85rem",
     width: "32px",
     height: "32px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    background: "rgba(255,255,255,0.1)",
+    background: "rgba(255, 107, 53, 0.16)",
+    color: "#ff8c5a",
     borderRadius: "8px",
   },
   rightPanel: {
@@ -307,22 +323,23 @@ const styles = {
     maxWidth: "340px",
   },
   title: {
-    fontSize: "1.5rem",
-    fontWeight: "700",
-    color: "#1a1a2e",
+    fontFamily: "'DM Serif Display', Georgia, serif",
+    fontWeight: "400",
+    fontSize: "1.6rem",
+    color: "#201a14",
     margin: "0 0 0.25rem 0",
   },
   subtitle: {
     fontSize: "0.9rem",
-    color: "#6b7280",
+    color: "#776c5f",
     margin: "0 0 1.5rem 0",
   },
   errorBox: {
-    background: "#fef2f2",
-    border: "1px solid #fecaca",
-    color: "#dc2626",
+    background: "#fdecec",
+    border: "1px solid #f5c6c8",
+    color: "#e5484d",
     padding: "0.75rem 1rem",
-    borderRadius: "8px",
+    borderRadius: "10px",
     fontSize: "0.85rem",
     marginBottom: "1.25rem",
   },
@@ -333,7 +350,7 @@ const styles = {
     display: "block",
     fontSize: "0.82rem",
     fontWeight: "600",
-    color: "#374151",
+    color: "#3d342b",
     marginBottom: "0.35rem",
   },
   inputWrapper: {
@@ -344,27 +361,27 @@ const styles = {
   inputIcon: {
     position: "absolute",
     left: "12px",
-    color: "#9ca3af",
+    color: "#a89b8b",
     fontSize: "0.85rem",
     pointerEvents: "none",
   },
   input: {
     width: "100%",
     padding: "0.65rem 0.75rem 0.65rem 2.5rem",
-    border: "1.5px solid #e5e7eb",
+    border: "1.5px solid #eae2d6",
     borderRadius: "10px",
     fontSize: "0.88rem",
-    color: "#1f2937",
-    background: "#fafafa",
-    outline: "none",
+    color: "#201a14",
+    background: "#faf7f2",
     boxSizing: "border-box",
+    fontFamily: "inherit",
   },
   pwToggle: {
     position: "absolute",
     right: "10px",
     background: "none",
     border: "none",
-    color: "#9ca3af",
+    color: "#a89b8b",
     cursor: "pointer",
     padding: "4px",
     display: "flex",
@@ -375,7 +392,7 @@ const styles = {
     display: "block",
     width: "100%",
     padding: "0.72rem",
-    background: "linear-gradient(135deg, #e97451, #d4553a)",
+    background: "linear-gradient(135deg, #ff6b35, #e14f1d)",
     color: "#fff",
     border: "none",
     borderRadius: "10px",
@@ -383,6 +400,7 @@ const styles = {
     fontWeight: "600",
     cursor: "pointer",
     marginTop: "0.4rem",
+    boxShadow: "0 6px 20px rgba(255, 107, 53, 0.28)",
   },
   divider: {
     display: "flex",
@@ -393,19 +411,19 @@ const styles = {
   dividerLine: {
     flex: 1,
     height: "1px",
-    background: "#e5e7eb",
+    background: "#eae2d6",
   },
   dividerText: {
     fontSize: "0.8rem",
-    color: "#9ca3af",
+    color: "#a89b8b",
   },
   loginBtn: {
     display: "block",
     width: "100%",
     padding: "0.72rem",
     background: "transparent",
-    color: "#374151",
-    border: "1.5px solid #d1d5db",
+    color: "#201a14",
+    border: "1.5px solid #d9cfbf",
     borderRadius: "10px",
     fontSize: "0.88rem",
     fontWeight: "600",

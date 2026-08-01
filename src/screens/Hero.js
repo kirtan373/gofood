@@ -50,7 +50,7 @@ export default function Hero({ search, setSearch }) {
           <div className="hero-search">
             <input
               type="text"
-              placeholder="Search burgers, pizza, momo..."
+              placeholder="Search chicken, pizza, burger, biryani..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />

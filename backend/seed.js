@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const MONGO_URI =
-  "mongodb+srv://kirtan0:kirtan012@cluster0.jxowk59.mongodb.net/db";
- // "mongodb://kirtan0:kirtan012@ac-pmqswbe-shard-00-00.jxowk59.mongodb.net:27017,ac-pmqswbe-shard-00-01.jxowk59.mongodb.net:27017,ac-pmqswbe-shard-00-02.jxowk59.mongodb.net:27017/gofood?ssl=true&replicaSet=atlas-ygp8hi-shard-0&authSource=admin&appName=Cluster0;"
+  "mongodb://kirtan0:kirtan012@ac-pmqswbe-shard-00-00.jxowk59.mongodb.net:27017,ac-pmqswbe-shard-00-01.jxowk59.mongodb.net:27017,ac-pmqswbe-shard-00-02.jxowk59.mongodb.net:27017/gofood?ssl=true&replicaSet=atlas-ygp8hi-shard-0&authSource=admin&appName=Cluster0";
+ // "mongodb+srv://kirtan0:kirtan012@cluster0.jxowk59.mongodb.net/db";
 
 async function seedDatabase() {
   try {
@@ -19,11 +19,11 @@ async function seedDatabase() {
 
     // Insert Categories
     await db.collection("food_category").insertMany([
-      { CategoryName: "Pizza", icon: "🍕" },
-      { CategoryName: "Burger", icon: "🍔" },
-      { CategoryName: "Biryani", icon: "🍛" },
-      { CategoryName: "Drinks", icon: "🥤" },
-      { CategoryName: "Dessert", icon: "🍰" }
+      { CategoryName: "Pizza", icon: "🍕", displayOrder: 1, isHidden: false, createdAt: new Date() },
+      { CategoryName: "Burger", icon: "🍔", displayOrder: 2, isHidden: false, createdAt: new Date() },
+      { CategoryName: "Biryani", icon: "🍛", displayOrder: 3, isHidden: false, createdAt: new Date() },
+      { CategoryName: "Drinks", icon: "🥤", displayOrder: 4, isHidden: false, createdAt: new Date() },
+      { CategoryName: "Dessert", icon: "🍰", displayOrder: 5, isHidden: false, createdAt: new Date() }
     ]);
 
     // Insert Food Items
@@ -32,29 +32,78 @@ async function seedDatabase() {
         CategoryName: "Pizza",
         name: "Margherita Pizza",
         img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
+        images: [
+          "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
+          "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500"
+        ],
         options: { Regular: "180", Medium: "280", Large: "380" },
-        description: "Classic cheese pizza."
+        price: 380,
+        discountPrice: 320,
+        ingredients: ["Cheese", "Tomato sauce", "Basil", "Olive oil"],
+        calories: 220,
+        prepTime: "15 mins",
+        availability: true,
+        description: "Classic cheese pizza.",
+        stock: 5,
+        isBestSeller: true,
+        isTodaysSpecial: true,
+        isHidden: false,
+        isFeatured: false,
+        isTrending: false,
+        createdAt: new Date()
       },
       {
         CategoryName: "Pizza",
         name: "Pepperoni Pizza",
         img: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=500",
+        images: [
+          "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=500",
+          "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=500"
+        ],
         options: { Regular: "220", Medium: "320", Large: "420" },
-        description: "Loaded with pepperoni."
+        price: 420,
+        discountPrice: null,
+        ingredients: ["Pepperoni", "Cheese", "Tomato sauce"],
+        calories: 290,
+        prepTime: "18 mins",
+        availability: true,
+        description: "Loaded with pepperoni.",
+        stock: 8,
+        isBestSeller: true,
+        isTodaysSpecial: false,
+        isHidden: false,
+        isFeatured: false,
+        isTrending: false,
+        createdAt: new Date()
       },
       {
         CategoryName: "Pizza",
         name: "BBQ Chicken Pizza",
         img: "https://images.unsplash.com/photo-1571066811602-716837d681de?w=500",
+        images: ["https://images.unsplash.com/photo-1571066811602-716837d681de?w=500"],
         options: { Regular: "240", Medium: "340", Large: "440" },
-        description: "Smoky BBQ chicken with onions and cheese."
+        price: 440,
+        discountPrice: null,
+        ingredients: ["BBQ chicken", "Onions", "Cheese"],
+        calories: 330,
+        prepTime: "20 mins",
+        availability: true,
+        description: "Smoky BBQ chicken with onions and cheese.",
+        stock: 35,
+        isBestSeller: false,
+        isTodaysSpecial: false,
+        isHidden: false,
+        isFeatured: true,
+        isTrending: false,
+        createdAt: new Date()
       },
       {
         CategoryName: "Pizza",
         name: "Veggie Supreme Pizza",
         img: "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?w=500",
         options: { Regular: "200", Medium: "300", Large: "400" },
-        description: "Loaded with fresh garden vegetables."
+        description: "Loaded with fresh garden vegetables.",
+        stock: 42
       },
       {
         CategoryName: "Pizza",
@@ -83,7 +132,8 @@ async function seedDatabase() {
         name: "Veg Burger",
         img: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=500",
         options: { Regular: "120", Large: "180" },
-        description: "Fresh vegetable burger."
+        description: "Fresh vegetable burger.",
+        stock: 3
       },
       {
         CategoryName: "Burger",
@@ -126,7 +176,8 @@ async function seedDatabase() {
         name: "Chicken Biryani",
         img: "https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?w=500",
         options: { Half: "180", Full: "320" },
-        description: "Spicy chicken biryani."
+        description: "Spicy chicken biryani.",
+        stock: 6
       },
       {
         CategoryName: "Biryani",
@@ -183,7 +234,8 @@ async function seedDatabase() {
         name: "Mango Lassi",
         img: "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?w=500",
         options: { "250ml": "80", "500ml": "130" },
-        description: "Creamy yogurt drink blended with mango."
+        description: "Creamy yogurt drink blended with mango.",
+        stock: 4
       },
       {
         CategoryName: "Drinks",

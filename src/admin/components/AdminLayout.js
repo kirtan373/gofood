@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
   FiGrid, FiShoppingBag, FiTag, FiClipboard, FiUsers,
-  FiTrendingUp, FiSettings, FiLogOut, FiMenu, FiX, FiStar
+  FiTrendingUp, FiSettings, FiLogOut, FiMenu, FiX, FiStar, FiMoon, FiSun
 } from 'react-icons/fi';
 import { useAdminAuth } from '../context/AdminAuthContext';
 import '../admin.css';
@@ -22,6 +22,18 @@ export default function AdminLayout() {
   const { admin, logout } = useAdminAuth();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [dark, setDark] = useState(() => localStorage.getItem('adminDark') === '1');
+
+  useEffect(() => {
+    const root = document.querySelector('.admin-root');
+    if (root) root.classList.toggle('admin-dark', dark);
+    document.body.classList.toggle('admin-dark', dark);
+    localStorage.setItem('adminDark', dark ? '1' : '0');
+    window.dispatchEvent(new CustomEvent('admin-theme', { detail: { dark } }));
+    return () => document.body.classList.remove('admin-dark');
+  }, [dark]);
+
+  const toggleTheme = () => setDark((d) => !d);
 
   const handleLogout = () => {
     logout();
@@ -35,7 +47,7 @@ export default function AdminLayout() {
   const activeLink = links.find((l) => window.location.pathname.startsWith(l.to));
 
   return (
-    <div className="admin-root d-flex">
+    <div className={`admin-root d-flex ${dark ? 'admin-dark' : ''}`}>
       <div
         className={`admin-sidebar-backdrop ${sidebarOpen ? 'open' : ''}`}
         onClick={() => setSidebarOpen(false)}
@@ -44,7 +56,7 @@ export default function AdminLayout() {
       <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="admin-sidebar-brand d-flex align-items-center justify-content-between">
           <div>
-            <h4>GoFood</h4>
+            <h4>Mitho</h4>
             <small>Admin Panel</small>
           </div>
           <button className="admin-sidebar-toggle d-lg-none text-light" onClick={() => setSidebarOpen(false)}>
@@ -77,7 +89,7 @@ export default function AdminLayout() {
             </div>
           </div>
           <button className="btn btn-sm w-100 d-flex align-items-center justify-content-center gap-2"
-            style={{ background: 'rgba(255,255,255,0.06)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, fontWeight: 500, padding: '0.5rem' }}
+            style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(250,247,242,0.6)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, fontWeight: 500, padding: '0.5rem' }}
             onClick={handleLogout}
           >
             <FiLogOut /> Sign Out
@@ -95,6 +107,14 @@ export default function AdminLayout() {
           </div>
           <div className="d-none d-sm-flex align-items-center gap-2">
             <span className="admin-welcome">Signed in as <strong>{admin?.name}</strong></span>
+            <button
+              className="admin-theme-toggle"
+              onClick={toggleTheme}
+              title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label="Toggle dark mode"
+            >
+              {dark ? <FiSun /> : <FiMoon />}
+            </button>
           </div>
         </header>
 

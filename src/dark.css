@@ -1,0 +1,89 @@
+/* ============================================================
+   MITHO — DARK MODE OVERRIDES
+   Scoped to <html data-theme="dark">. Loaded last so these win.
+   ============================================================ */
+
+/* ── Landing ── */
+[data-theme="dark"] .lp-cat-card,
+[data-theme="dark"] .lp-popular-card,
+[data-theme="dark"] .lp-feature-card,
+[data-theme="dark"] .lp-hero-search,
+[data-theme="dark"] .lp-hero-float,
+[data-theme="dark"] .lp-btn-white {
+  background: var(--surface);
+  border-color: var(--border-light);
+}
+[data-theme="dark"] .lp-btn-white:hover {
+  background: var(--bg-warm);
+}
+[data-theme="dark"] .lp-hero-tags span {
+  background: rgba(255, 255, 255, 0.06);
+}
+[data-theme="dark"] .lp-step-connector {
+  background: linear-gradient(90deg, var(--border), var(--brand), var(--border));
+}
+[data-theme="dark"] .lp-popular-card:hover,
+[data-theme="dark"] .lp-cat-card:hover,
+[data-theme="dark"] .lp-feature-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+[data-theme="dark"] .lp-feature-card {
+  border-color: var(--border);
+}
+
+/* ── Menu / Home ── */
+[data-theme="dark"] .filter-pill:hover {
+  background: var(--brand-glow-soft);
+}
+[data-theme="dark"] .category-box.category-active {
+  background: var(--brand-glow-soft);
+}
+[data-theme="dark"] .category-box.category-active .category-icon {
+  background: linear-gradient(145deg, var(--espresso-700), var(--espresso-600));
+}
+[data-theme="dark"] .category-icon {
+  background: linear-gradient(145deg, var(--espresso-800), var(--espresso-700));
+}
+[data-theme="dark"] .category-box:hover .category-icon {
+  background: linear-gradient(145deg, var(--espresso-700), var(--espresso-600));
+}
+
+/* ── Why choose us ── */
+[data-theme="dark"] .why-section {
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg-warm) 100%);
+}
+[data-theme="dark"] .why-card .why-icon {
+  background: linear-gradient(145deg, var(--espresso-800), var(--espresso-700));
+}
+
+/* ── Reviews ── */
+[data-theme="dark"] .reviews-section .alert-warning {
+  background: linear-gradient(135deg, #2a221a, #1f1913);
+  border-color: rgba(245, 166, 35, 0.4);
+  color: #f5b642;
+}
+
+/* ── Product card (gf-card uses CSS custom props set inline) ── */
+[data-theme="dark"] .gf-card {
+  --gf-surface: var(--surface);
+  --gf-ink: var(--ink);
+  --gf-muted: var(--muted);
+  --gf-brand: var(--brand);
+  --gf-brand-dark: var(--brand-dark);
+  --gf-border: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+[data-theme="dark"] .gf-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+[data-theme="dark"] .gf-card .gf-img-wrap {
+  background: var(--bg-warm);
+}
+[data-theme="dark"] .gf-card .gf-selects select {
+  background-color: var(--bg);
+  border-color: var(--border);
+  color: var(--ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%23a89b8b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* ── Wishlist page tiles reuse ui.css tokens, nothing extra needed ── */

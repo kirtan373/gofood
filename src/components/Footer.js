@@ -16,7 +16,7 @@ export default function Footer() {
         <div className="footer-section">
           <h2 className="footer-logo">
             <FaUtensils className="me-2" />
-            GoFood
+            Mitho
           </h2>
 
           <p className="footer-description">
@@ -41,7 +41,7 @@ export default function Footer() {
 
           <p>
             <FaEnvelope className="footer-icon" />
-            gofood447@gmail.com
+            mitho000@gmail.com
           </p>
 
           <p>
@@ -58,7 +58,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        © 2026 GoFood | Designed & Developed by <strong>Kirtan</strong>
+        © 2026 Mitho | Designed & Developed by <strong>Kirtan</strong>
       </div>
     </footer>
   );

@@ -35,8 +35,8 @@ export default function RevenuePage() {
     datasets: [{
       label: 'Revenue (Rs.)',
       data: last7.map((d) => d.total),
-      backgroundColor: 'rgba(16, 185, 129, 0.8)',
-      hoverBackgroundColor: '#10b981',
+      backgroundColor: 'rgba(255, 107, 53, 0.8)',
+      hoverBackgroundColor: '#ff6b35',
       borderRadius: 8,
       borderSkipped: false,
     }]
@@ -48,12 +48,12 @@ export default function RevenuePage() {
     scales: {
       y: {
         beginAtZero: true,
-        grid: { color: '#f1f5f9' },
-        ticks: { font: { family: 'Inter', size: 11 }, color: '#94a3b8' }
+        grid: { color: '#f3ede4' },
+        ticks: { font: { family: 'DM Sans', size: 11 }, color: '#a89b8b' }
       },
       x: {
         grid: { display: false },
-        ticks: { font: { family: 'Inter', size: 11 }, color: '#94a3b8' }
+        ticks: { font: { family: 'DM Sans', size: 11 }, color: '#a89b8b' }
       }
     }
   };
@@ -65,14 +65,14 @@ export default function RevenuePage() {
       {error && <div className="alert alert-danger">{error}</div>}
 
       {loading ? (
-        <div className="admin-empty-state"><div className="spinner-border" style={{ color: '#10b981' }} role="status" /></div>
+        <div className="admin-empty-state"><div className="spinner-border" style={{ color: '#ff6b35' }} role="status" /></div>
       ) : (
         <>
           <div className="row g-3 mb-4">
             {[
-              { label: 'Last 7 Days', value: revenue?.totalLast7 || 0, color: '#10b981' },
-              { label: 'Last 30 Days', value: revenue?.totalLast30 || 0, color: '#6366f1' },
-              { label: 'All Time', value: revenue?.totalAllTime || 0, color: '#f59e0b' },
+              { label: 'Last 7 Days', value: revenue?.totalLast7 || 0, color: '#ff6b35' },
+              { label: 'Last 30 Days', value: revenue?.totalLast30 || 0, color: '#e8a33d' },
+              { label: 'All Time', value: revenue?.totalAllTime || 0, color: '#2a221a' },
             ].map((item) => (
               <div key={item.label} className="col-md-4">
                 <div className="admin-revenue-card" style={{ borderLeft: `3px solid ${item.color}` }}>

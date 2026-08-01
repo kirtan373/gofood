@@ -33,20 +33,20 @@ export default function AdminLogin() {
         <div className="text-center mb-4">
           <div style={{
             width: 56, height: 56, borderRadius: 16,
-            background: 'linear-gradient(135deg, #10b981, #059669)',
+            background: 'linear-gradient(135deg, #ff6b35, #e14f1d)',
             color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '1.5rem', fontWeight: 800, margin: '0 auto 1rem',
-            boxShadow: '0 8px 20px rgba(16, 185, 129, 0.3)'
+            boxShadow: '0 8px 20px rgba(255, 107, 53, 0.35)'
           }}>
-            G
+            M
           </div>
-          <h3 style={{ fontWeight: 800, fontSize: '1.35rem', marginBottom: '0.2rem', letterSpacing: '-0.02em' }}>GoFood Admin</h3>
-          <p style={{ color: '#64748b', fontSize: '0.88rem', margin: 0 }}>Sign in to manage your store</p>
+          <h3 style={{ fontWeight: 800, fontSize: '1.35rem', marginBottom: '0.2rem', letterSpacing: '-0.02em' }}>Mitho Admin</h3>
+          <p style={{ color: '#776c5f', fontSize: '0.88rem', margin: 0 }}>Sign in to manage your store</p>
         </div>
 
         {error && (
           <div style={{
-            background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626',
+            background: '#fdecec', border: '1px solid #f5c6c8', color: '#e5484d',
             padding: '0.65rem 0.85rem', borderRadius: 10, fontSize: '0.85rem', marginBottom: '1rem'
           }}>
             {error}
@@ -55,14 +55,14 @@ export default function AdminLogin() {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label className="form-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#475569' }}>Email</label>
+            <label className="form-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#3d342b' }}>Email</label>
             <div style={{ position: 'relative' }}>
-              <FiMail style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', fontSize: '0.9rem' }} />
+              <FiMail style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#a89b8b', fontSize: '0.9rem' }} />
               <input
                 className="form-control"
                 style={{ paddingLeft: '2.5rem' }}
                 type="email"
-                placeholder="admin@gofood.com"
+                placeholder="admin@mitho.com"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 required
@@ -71,9 +71,9 @@ export default function AdminLogin() {
           </div>
 
           <div className="mb-4">
-            <label className="form-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#475569' }}>Password</label>
+            <label className="form-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#3d342b' }}>Password</label>
             <div style={{ position: 'relative' }}>
-              <FiLock style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', fontSize: '0.9rem' }} />
+              <FiLock style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#a89b8b', fontSize: '0.9rem' }} />
               <input
                 className="form-control"
                 style={{ paddingLeft: '2.5rem' }}
@@ -95,8 +95,8 @@ export default function AdminLogin() {
           </button>
         </form>
 
-        <p className="text-center mt-4 mb-0" style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
-          No admin account? Run <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: 4 }}>npm run seed:admin</code>
+        <p className="text-center mt-4 mb-0" style={{ fontSize: '0.78rem', color: '#a89b8b' }}>
+          No admin account? Run <code style={{ background: '#f3ede4', padding: '2px 6px', borderRadius: 4 }}>npm run seed:admin</code>
         </p>
       </div>
     </div>

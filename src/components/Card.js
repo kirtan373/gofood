@@ -2,7 +2,10 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatchCart, useCart } from "./ContextReducer";
 import { useToast } from "./Toast";
-import { FaShoppingCart } from "react-icons/fa";
+import { useUserAuth } from "../context/UserAuthContext";
+import { useFavorites } from "../context/FavoritesContext";
+import LoginRequiredPopup from "./LoginRequiredPopup";
+import { FaShoppingCart, FaHeart, FaRegHeart } from "react-icons/fa";
 
 export default function Card(props) {
   const dispatch = useDispatchCart();
@@ -14,8 +17,22 @@ export default function Card(props) {
   const [size, setSize] = useState(priceOptions[0] || "");
   const navigate = useNavigate();
   const addToast = useToast();
+  const { isLoggedIn } = useUserAuth();
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const fav = isFavorite(props.foodItem._id);
+
+  const handleFav = (e) => {
+    e.stopPropagation();
+    toggleFavorite(props.foodItem);
+  };
 
   const handleaddtocart = async () => {
+    if (!isLoggedIn) {
+      setShowLoginPopup(true);
+      return;
+    }
+
     const unitPrice = parseInt(options[size] || 0, 10);
     const itemInCart = data.find(
       (item) => item.id === props.foodItem._id && item.size === size
@@ -56,47 +73,47 @@ export default function Card(props) {
     <>
     <style>{`
       .gf-card {
-        --gf-cream: #fbf6ee;
-        --gf-ink: #1a1208;
-        --gf-muted: #8a7e70;
+        --gf-surface: #ffffff;
+        --gf-ink: #201a14;
+        --gf-muted: #776c5f;
         --gf-brand: #ff6b35;
-        --gf-brand-light: #ff8c5a;
-        --gf-sage: #5b7553;
-        --gf-border: #ede5da;
-        background: var(--gf-cream);
+        --gf-brand-dark: #e14f1d;
+        --gf-border: #eae2d6;
+        background: var(--gf-surface);
         border: 1px solid var(--gf-border);
         border-radius: 18px;
         overflow: hidden;
-        box-shadow: 0 4px 16px rgba(26, 18, 8, 0.06);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 10px rgba(32, 26, 20, 0.05);
+        transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         color: var(--gf-ink);
         font-family: 'DM Sans', -apple-system, sans-serif;
         position: relative;
       }
       .gf-card:hover {
         transform: translateY(-6px);
-        box-shadow: 0 16px 40px rgba(26, 18, 8, 0.12);
+        box-shadow: 0 16px 40px rgba(32, 26, 20, 0.1);
         border-color: transparent;
       }
       .gf-card .gf-img-wrap {
         position: relative;
         height: 200px;
         overflow: hidden;
+        background: #f3ede4;
       }
       .gf-card .gf-img-wrap img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         cursor: pointer;
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
       }
       .gf-card:hover .gf-img-wrap img {
-        transform: scale(1.08);
+        transform: scale(1.07);
       }
       .gf-card .gf-img-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(180deg, transparent 60%, rgba(26,18,8,0.4) 100%);
+        background: linear-gradient(180deg, transparent 60%, rgba(18, 14, 10, 0.45) 100%);
         opacity: 0;
         transition: opacity 0.3s;
       }
@@ -104,7 +121,7 @@ export default function Card(props) {
         opacity: 1;
       }
       .gf-card .gf-body {
-        padding: 20px;
+        padding: 18px 20px 20px;
       }
       .gf-card .gf-title {
         font-family: 'DM Serif Display', Georgia, serif;
@@ -115,6 +132,9 @@ export default function Card(props) {
         cursor: pointer;
         transition: color 0.2s;
         line-height: 1.3;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .gf-card .gf-title:hover {
         color: var(--gf-brand);
@@ -130,7 +150,7 @@ export default function Card(props) {
       }
       .gf-card .gf-selects select {
         flex: 1;
-        background: #fff;
+        background: #faf7f2;
         color: var(--gf-ink);
         border: 1px solid var(--gf-border);
         border-radius: 10px;
@@ -143,14 +163,14 @@ export default function Card(props) {
         outline: none;
         -webkit-appearance: none;
         appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%238a7e70' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%23776c5f' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
         background-position: right 10px center;
         padding-right: 28px;
       }
       .gf-card .gf-selects select:focus {
         border-color: var(--gf-brand);
-        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.12);
       }
       .gf-card .gf-foot {
         display: flex;
@@ -171,22 +191,23 @@ export default function Card(props) {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: linear-gradient(135deg, var(--gf-sage), #4a6144);
+        background-image: linear-gradient(135deg, var(--gf-brand) 0%, var(--gf-brand-dark) 100%);
         border: none;
         color: #fff;
         font-weight: 600;
         font-size: 0.82rem;
         letter-spacing: 0.02em;
-        padding: 8px 18px;
+        padding: 9px 18px;
         border-radius: 999px;
         cursor: pointer;
         transition: all 0.2s;
         font-family: inherit;
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.24);
       }
       .gf-card .gf-add-btn:hover {
-        background: linear-gradient(135deg, #4a6144, #3d5238);
+        background-image: linear-gradient(135deg, var(--gf-brand-dark) 0%, #c7430f 100%);
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(91, 117, 83, 0.3);
+        box-shadow: 0 6px 18px rgba(255, 107, 53, 0.34);
       }
       .gf-card .gf-add-btn svg {
         font-size: 0.75rem;
@@ -198,11 +219,20 @@ export default function Card(props) {
       style={{ width: "100%", maxHeight: "420px" }}
     >
       <div className="gf-img-wrap">
+        {props.badge && <span className="gf-tile-badge">{props.badge}</span>}
         <img
           src={props.foodItem.img}
           alt={props.foodItem.name}
+          loading="lazy"
           onClick={() => navigate(`/product/${props.foodItem._id}`)}
         />
+        <button
+          className={`gf-fav-btn ${fav ? 'gf-fav-active' : ''}`}
+          aria-label={fav ? 'Remove from wishlist' : 'Add to wishlist'}
+          onClick={handleFav}
+        >
+          {fav ? <FaHeart /> : <FaRegHeart />}
+        </button>
         <div className="gf-img-overlay" />
       </div>
 
@@ -239,18 +269,19 @@ export default function Card(props) {
             </select>
           </div>
 
-          <div className="gf-foot">
-            <div className="gf-price">
-              <span>Rs</span> {finalPrice}/-
-            </div>
-            <button className="gf-add-btn" onClick={handleaddtocart}>
-              <FaShoppingCart />
-              Add
-            </button>
+        <div className="gf-foot">
+          <div className="gf-price">
+            <span>Rs</span> {finalPrice}/-
           </div>
+          <button className="gf-add-btn" onClick={handleaddtocart}>
+            <FaShoppingCart />
+            Add
+          </button>
         </div>
       </div>
     </div>
+    </div>
+    <LoginRequiredPopup open={showLoginPopup} onClose={() => setShowLoginPopup(false)} />
     </>
   );
 }

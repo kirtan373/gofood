@@ -72,7 +72,7 @@ export default function ReviewsPage() {
         </div>
         <div className="col-md-4">
           <div className="admin-review-stat">
-            <div className="stat-value" style={{ color: '#10b981' }}>{fiveStarCount}</div>
+            <div className="stat-value" style={{ color: '#e8a33d' }}>{fiveStarCount}</div>
             <div className="stat-label">5-Star Reviews</div>
           </div>
         </div>
@@ -81,7 +81,7 @@ export default function ReviewsPage() {
       <div className="admin-card mb-3">
         <div className="card-body admin-search-bar">
           <div style={{ position: 'relative', maxWidth: 400 }}>
-            <FiSearch style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+            <FiSearch style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#a89b8b' }} />
             <input className="form-control" style={{ paddingLeft: '2.25rem' }} placeholder="Search by name, email, or review..." value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
         </div>
@@ -90,7 +90,7 @@ export default function ReviewsPage() {
       <div className="admin-card">
         <div className="card-body">
           {loading ? (
-            <div className="admin-empty-state"><div className="spinner-border" style={{ color: '#10b981' }} role="status" /></div>
+            <div className="admin-empty-state"><div className="spinner-border" style={{ color: '#ff6b35' }} role="status" /></div>
           ) : filteredReviews.length === 0 ? (
             <div className="admin-empty-state">
               <FiStar size={32} style={{ marginBottom: 8, opacity: 0.4 }} />
@@ -113,18 +113,18 @@ export default function ReviewsPage() {
                   {filteredReviews.map((review) => (
                     <tr key={review._id}>
                       <td style={{ fontWeight: 600 }}>{review.name}</td>
-                      <td style={{ color: '#64748b' }}>{review.email}</td>
+                      <td style={{ color: '#776c5f' }}>{review.email}</td>
                       <td>
                         <span style={{ display: 'inline-flex', gap: 2 }}>
                           {[1, 2, 3, 4, 5].map((s) => (
-                            <span key={s} style={{ color: s <= review.rating ? '#f59e0b' : '#e2e8f0', fontSize: '0.85rem' }}>★</span>
+                            <span key={s} style={{ color: s <= review.rating ? '#e8a33d' : '#eae2d6', fontSize: '0.85rem' }}>★</span>
                           ))}
                         </span>
                       </td>
-                      <td style={{ maxWidth: '300px', color: '#475569', fontSize: '0.85rem' }}>
+                      <td style={{ maxWidth: '300px', color: '#3d342b', fontSize: '0.85rem' }}>
                         {review.review.length > 80 ? `${review.review.slice(0, 80)}...` : review.review}
                       </td>
-                      <td style={{ color: '#94a3b8', fontSize: '0.82rem' }}>
+                      <td style={{ color: '#a89b8b', fontSize: '0.82rem' }}>
                         {new Date(review.createdAt).toLocaleDateString()}
                       </td>
                       <td className="text-end">
