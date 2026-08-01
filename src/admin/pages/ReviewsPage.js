@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { FiSearch, FiTrash2, FiStar } from 'react-icons/fi';
 import { useAdminAuth } from '../context/AdminAuthContext';
@@ -12,7 +12,7 @@ export default function ReviewsPage() {
   const [search, setSearch] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
@@ -23,9 +23,9 @@ export default function ReviewsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
-  useEffect(() => { if (token) loadData(); }, [token]);
+  useEffect(() => { if (token) loadData(); }, [token, loadData]);
 
   const confirmDelete = async () => {
     if (!deleteTarget) return;

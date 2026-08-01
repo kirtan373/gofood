@@ -14,14 +14,14 @@ const FREE_DELIVERY_THRESHOLD = 1000;
 const FIRST_ORDER_DISCOUNT_PERCENT = 30;
 
 export default function Checkout() {
-  const cartData = useCart() || [];
+  const rawCart = useCart();
+  const cartData = useMemo(() => rawCart || [], [rawCart]);
   const dispatch = useDispatchCart();
   const navigate = useNavigate();
-  const { isLoggedIn, logout, verifyUser } = useUserAuth();
+  const { isLoggedIn, logout } = useUserAuth();
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [processing, setProcessing] = useState(false);
   const [isFirstOrder, setIsFirstOrder] = useState(false);
-  const [checkingFirstOrder, setCheckingFirstOrder] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successTxId, setSuccessTxId] = useState(null);
   const [successTotal, setSuccessTotal] = useState(null);
@@ -49,7 +49,6 @@ export default function Checkout() {
     const checkFirstOrder = async () => {
       const userEmail = localStorage.getItem("userEmail");
       if (!userEmail) {
-        setCheckingFirstOrder(false);
         return;
       }
       try {
@@ -64,8 +63,6 @@ export default function Checkout() {
         }
       } catch {
         // Silently fail
-      } finally {
-        setCheckingFirstOrder(false);
       }
     };
     checkFirstOrder();

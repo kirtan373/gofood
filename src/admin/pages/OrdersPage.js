@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FiSearch, FiClipboard, FiPhone, FiMapPin, FiUser, FiMessageCircle, FiCreditCard, FiHash } from 'react-icons/fi';
 import { useAdminAuth } from '../context/AdminAuthContext';
 import { adminApi, ApiError } from '../utils/api';
@@ -22,7 +22,7 @@ export default function OrdersPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [updatingId, setUpdatingId] = useState(null);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
@@ -33,9 +33,9 @@ export default function OrdersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
-  useEffect(() => { if (token) loadData(); }, [token]);
+  useEffect(() => { if (token) loadData(); }, [token, loadData]);
 
   const handleStatusChange = async (order, status) => {
     setUpdatingId(order._id);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useSearchParams, useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -19,6 +19,29 @@ export default function PaymentStatus() {
   const [successTotal, setSuccessTotal] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const hasRun = useRef(false);
+
+  const saveOrder = useCallback(async (cartData, orderId, txId, payMethod, delInfo) => {
+    const userEmail = localStorage.getItem("userEmail");
+    if (!userEmail) return;
+
+    try {
+      await fetch(`${API}/orderData`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          order_data: cartData,
+          email: userEmail,
+          order_date: new Date().toISOString(),
+          deliveryInfo: delInfo || undefined,
+          paymentMethod: payMethod,
+          transactionId: txId,
+        }),
+      });
+      dispatch({ type: "DROP" });
+    } catch {
+      // order may have already been placed
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     if (hasRun.current) return;
@@ -150,30 +173,7 @@ export default function PaymentStatus() {
     };
 
     verify();
-  }, [urlGateway, searchParams]);
-
-  const saveOrder = async (cartData, orderId, txId, payMethod, delInfo) => {
-    const userEmail = localStorage.getItem("userEmail");
-    if (!userEmail) return;
-
-    try {
-      await fetch(`${API}/orderData`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          order_data: cartData,
-          email: userEmail,
-          order_date: new Date().toISOString(),
-          deliveryInfo: delInfo || undefined,
-          paymentMethod: payMethod,
-          transactionId: txId,
-        }),
-      });
-      dispatch({ type: "DROP" });
-    } catch {
-      // order may have already been placed
-    }
-  };
+  }, [urlGateway, searchParams, saveOrder]);
 
   return (
     <div className="checkout-container">
